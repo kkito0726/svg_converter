@@ -1,4 +1,6 @@
 from svg import svg2csv
+from plot import plot_csv
+import os
 
 if __name__ == "__main__":
     filename = input("ファイルパスの入力: ")
@@ -6,3 +8,5 @@ if __name__ == "__main__":
     velocity = input("ステージの速度を入力 (μm/s): ")
 
     svg2csv(filename, float(power), int(velocity))
+    csv_path = os.path.splitext(filename)[0] + ".csv"
+    plot_csv(csv_path)
