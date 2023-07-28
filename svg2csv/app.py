@@ -12,17 +12,27 @@ COLUMN_HEIGHT = 30
 center_x = int(WIDTH / 2)
 
 
-def file_select():
+def file_select() -> str:
     filetype = [("SVG", "*.svg")]
     file_path = filedialog.askopenfilename(filetypes=filetype)
 
     return file_path
 
 
-def run_convert():
+def init_entry(entry: tk.Entry, value: str) -> None:
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, value)
+
+
+def run_convert() -> None:
     # 入力形式のチェック
-    if not powerBox.get().replace(".", "").isnumeric() and speedBox.get().isnumeric():
+    if (
+        not powerBox.get().replace(".", "").isnumeric()
+        or not speedBox.get().isnumeric()
+    ):
         messagebox.showerror("Error", "数値の入力に誤りがあります。")
+        init_entry(powerBox, "0.5")
+        init_entry(speedBox, "3000")
         return
 
     power = float(powerBox.get())
@@ -31,10 +41,12 @@ def run_convert():
     # 入力範囲のチェック
     if not 0.01 <= power <= 1.22:
         messagebox.showerror("Error", "レーザーパワーが範囲外です")
+        init_entry(powerBox, "0.5")
         return
 
     if not 1 <= speed <= 5000:
         messagebox.showerror("Error", "ステージの速度が範囲外です")
+        init_entry(speedBox, "3000")
         return
 
     file_path = file_select()
@@ -78,7 +90,7 @@ isPreview.set(True)
 isPreviewCheckbox = tk.Checkbutton(text="プレビューを表示", variable=isPreview)
 isPreviewCheckbox.place(x=PADDING, y=PADDING + COLUMN_HEIGHT * 2)
 
-
+# 変換実行ボタン
 runButton = tk.Button(text="CSV変換", command=run_convert)
 runButton.pack(side=tk.BOTTOM)
 
