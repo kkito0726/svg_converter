@@ -9,4 +9,4 @@ if __name__ == "__main__":
 
     svg2csv(filename, float(power), int(velocity))
     csv_path = os.path.splitext(filename)[0] + ".csv"
-    plot_csv(csv_path)
+    plot_csv(csv_path, color="gradation")
