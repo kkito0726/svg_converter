@@ -10,6 +10,6 @@ setup(
     version="1.1.1",  # バージョン
     description="MEA計測データを読み込み・解析するためのモジュール",  # 説明
     packages=find_packages(),  # 使うモジュール一覧を指定する
-    install_requires=_requires_from_file("requirements.txt"),
+    # install_requires=_requires_from_file("requirements.txt"),
     license="MIT",  # ライセンス
 )
