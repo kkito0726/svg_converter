@@ -57,7 +57,7 @@ plot_csv(csv_path, color="gradation")
 $ amc_plt csv_fileのパス　-c
 ```
 
-## -c は MEA 電極基板で位置合わせするときにつけるオプション。35 mm dish 等に加工する場合はいらない。
+-c は MEA 電極基板で位置合わせするときにつけるオプション。35 mm dish 等に加工する場合はいらない。
 
 ### 4. Raspberry pi のシャットダウン
 
