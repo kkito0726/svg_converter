@@ -1,0 +1,912 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="3500"
+   height="3500"
+   viewBox="0 0 3500 3500.0001"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
+   sodipodi:docname="545_electode.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="0.222"
+     inkscape:cx="1585.5856"
+     inkscape:cy="1750"
+     inkscape:window-width="1680"
+     inkscape:window-height="997"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showgrid="false" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="electrode"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       id="rect1"
+       width="50"
+       height="50"
+       x="150"
+       y="150"
+       style="stroke-width:0.221508"
+       inkscape:tile-cx="25"
+       inkscape:tile-cy="25"
+       inkscape:tile-w="50"
+       inkscape:tile-h="50"
+       inkscape:tile-x0="0"
+       inkscape:tile-y0="0" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(0,450)"
+       id="use128" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(0,900)"
+       id="use129" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(0,1350)"
+       id="use130" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(0,1800)"
+       id="use131" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(0,2250)"
+       id="use132" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(0,2700)"
+       id="use133" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(0,3150)"
+       id="use134" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450)"
+       id="use135" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450,450)"
+       id="use136" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450,900)"
+       id="use137" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450,1350)"
+       id="use138" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450,1800)"
+       id="use139" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450,2250)"
+       id="use140" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450,2700)"
+       id="use141" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(450,3150)"
+       id="use142" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900)"
+       id="use143" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900,450)"
+       id="use144" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900,900)"
+       id="use145" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900,1350)"
+       id="use146" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900,1800)"
+       id="use147" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900,2250)"
+       id="use148" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900,2700)"
+       id="use149" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(900,3150)"
+       id="use150" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350)"
+       id="use151" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350,450)"
+       id="use152" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350,900)"
+       id="use153" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350,1350)"
+       id="use154" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350,1800)"
+       id="use155" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350,2250)"
+       id="use156" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350,2700)"
+       id="use157" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1350,3150)"
+       id="use158" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800)"
+       id="use159" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800,450)"
+       id="use160" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800,900)"
+       id="use161" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800,1350)"
+       id="use162" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800,1800)"
+       id="use163" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800,2250)"
+       id="use164" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800,2700)"
+       id="use165" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(1800,3150)"
+       id="use166" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250)"
+       id="use167" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250,450)"
+       id="use168" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250,900)"
+       id="use169" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250,1350)"
+       id="use170" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250,1800)"
+       id="use171" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250,2250)"
+       id="use172" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250,2700)"
+       id="use173" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2250,3150)"
+       id="use174" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700)"
+       id="use175" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700,450)"
+       id="use176" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700,900)"
+       id="use177" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700,1350)"
+       id="use178" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700,1800)"
+       id="use179" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700,2250)"
+       id="use180" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700,2700)"
+       id="use181" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(2700,3150)"
+       id="use182" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150)"
+       id="use183" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150,450)"
+       id="use184" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150,900)"
+       id="use185" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150,1350)"
+       id="use186" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150,1800)"
+       id="use187" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150,2250)"
+       id="use188" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150,2700)"
+       id="use189" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#rect1"
+       xlink:href="#rect1"
+       transform="translate(3150,3150)"
+       id="use190" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="ito">
+    <rect
+       id="rect190"
+       width="20"
+       height="100"
+       x="165"
+       y="50"
+       style="fill:#999999;stroke-width:0.629243" />
+    <rect
+       id="rect190-6"
+       width="20"
+       height="100"
+       x="-635"
+       y="50"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(-90)" />
+    <rect
+       id="rect190-6-6"
+       width="20"
+       height="100"
+       x="-1085"
+       y="-150"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="matrix(0,-1,-1,0,0,0)" />
+    <rect
+       id="rect190-6-6-0"
+       width="20"
+       height="100"
+       x="-1535"
+       y="50"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(-90)" />
+    <rect
+       id="rect190-7"
+       width="20"
+       height="100"
+       x="1065"
+       y="50"
+       style="fill:#999999;stroke-width:0.629243" />
+    <rect
+       id="rect190-7-7"
+       width="20"
+       height="100"
+       x="1515"
+       y="50"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none" />
+    <rect
+       id="rect190-7-7-9"
+       width="20"
+       height="100"
+       x="615"
+       y="50"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none" />
+    <path
+       id="rect190-7-7-9-6"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="M -50 390 L -615 390 L -635 390 L -635 600 L -615 600 L -615 410 L -50 410 L -50 390 z "
+       transform="rotate(-90)" />
+    <path
+       id="rect190-7-7-9-6-6"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="m 840,50 v 565 20 h 210 V 615 H 860 V 50 Z" />
+    <rect
+       id="rect190-7-7-9-6-1-4-6-4-6"
+       width="20"
+       height="1465"
+       x="-1760"
+       y="50"
+       style="fill:#999999;stroke-width:2.40876;stroke-dasharray:none"
+       transform="rotate(-90)" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="M 1365 50 L 1365 615 L 1365 635 L 1500 635 L 1500 615 L 1385 615 L 1385 50 L 1365 50 z " />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="M 50.000035,915.00001 H 615.00004 635 V 1050 H 615.00004 V 935.00001 H 50.000035 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9-9"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="M 50.000031,1365 H 615.00004 635 v 135 H 615.00004 V 1385 H 50.000031 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="M 1215 50 L 1215 1065 L 1215 1085 L 1500 1085 L 1500 1065 L 1235 1065 L 1235 50 L 1215 50 z " />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="M 49.999994,1215 H 1065 h 20 v 285 h -20 V 1235 H 49.999994 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9-2"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="M 49.999982,765.00004 H 1065 1085 V 1050 h -20 V 785.00004 H 49.999982 Z" />
+    <rect
+       id="rect190-7-7-9-6-1-2-8-4"
+       width="20"
+       height="210"
+       x="-1535"
+       y="-1760"
+       style="fill:#999999;stroke-width:0.911977;stroke-dasharray:none"
+       transform="scale(-1)" />
+    <rect
+       id="rect190-65"
+       width="20"
+       height="99.999992"
+       x="-3334.9998"
+       y="50"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(-90)" />
+    <rect
+       id="rect190-6-0"
+       width="19.999998"
+       height="100"
+       x="-634.99994"
+       y="-3449.9998"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="scale(-1)" />
+    <rect
+       id="rect190-6-6-03"
+       width="19.999998"
+       height="100"
+       x="-1084.9999"
+       y="3349.9998"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="scale(-1,1)" />
+    <rect
+       id="rect190-6-6-0-9"
+       width="19.999998"
+       height="100"
+       x="-1534.9999"
+       y="-3449.9998"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="scale(-1)" />
+    <rect
+       id="rect190-7-4"
+       width="20"
+       height="99.999992"
+       x="-2434.9998"
+       y="50"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(-90)" />
+    <rect
+       id="rect190-7-7-3"
+       width="20"
+       height="99.999992"
+       x="-1985"
+       y="50"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none"
+       transform="rotate(-90)" />
+    <rect
+       id="rect190-7-7-9-0"
+       width="20"
+       height="99.999992"
+       x="-2884.9998"
+       y="50"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none"
+       transform="rotate(-90)" />
+    <path
+       id="rect190-7-7-9-6-3"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="m 50.000058,3110 h 564.999962 20 v -210 h -20 v 190 H 50.000058 Z" />
+    <path
+       id="rect190-7-7-9-6-6-2"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="m 50.000058,2660 h 564.999962 20 v -210 h -20 v 190 H 50.000058 Z" />
+    <rect
+       id="rect190-7-7-9-6-1-4-6-4-6-5"
+       width="19.999998"
+       height="1465"
+       x="-1760"
+       y="-3449.9998"
+       style="fill:#999999;stroke-width:2.40876;stroke-dasharray:none"
+       transform="scale(-1)" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-3"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="m 50.000058,2135 h 564.999962 20 v -135 h -20 v 115 H 50.000058 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9-7"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="M 915,3450 V 2884.9999 2865 h 135 v 19.9999 H 935 V 3450 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9-9-0"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="M 1364.9999,3450 V 2884.9999 2865 h 135 v 19.9999 h -115 V 3450 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-94"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="M 50.000058,2285 H 1065 h 20 v -285 h -20 v 265 H 50.000058 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9-7"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="m 1214.9999,3450 v -1015 -20 h 285 v 20 h -265 v 1015 z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9-2-1"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="M 765.00001,3450 V 2435 2415 H 1050 v 20 H 785.00001 v 1015 z" />
+    <rect
+       id="rect190-7-7-9-6-1-2-8-4-0"
+       width="20"
+       height="209.99998"
+       x="1965"
+       y="-1760"
+       style="fill:#999999;stroke-width:0.911977;stroke-dasharray:none"
+       transform="rotate(90)" />
+    <rect
+       id="rect190-8"
+       width="20"
+       height="100"
+       x="-3335"
+       y="-3450"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="scale(-1)" />
+    <rect
+       id="rect190-6-08"
+       width="20"
+       height="100"
+       x="2865"
+       y="-3450"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(90)" />
+    <rect
+       id="rect190-6-6-8"
+       width="20"
+       height="100"
+       x="2415"
+       y="3350"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="matrix(0,1,1,0,0,0)" />
+    <rect
+       id="rect190-6-6-0-2"
+       width="20"
+       height="100"
+       x="1965"
+       y="-3450"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(90)" />
+    <rect
+       id="rect190-7-72"
+       width="20"
+       height="100"
+       x="-2435"
+       y="-3450"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="scale(-1)" />
+    <rect
+       id="rect190-7-7-2"
+       width="20"
+       height="100"
+       x="-1985"
+       y="-3450"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none"
+       transform="scale(-1)" />
+    <rect
+       id="rect190-7-7-9-9"
+       width="20"
+       height="100"
+       x="-2885"
+       y="-3450"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none"
+       transform="scale(-1)" />
+    <path
+       id="rect190-7-7-9-6-60"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="m 3110,3449.9999 v -565 -20 h -210 v 20 h 190 v 565 z" />
+    <path
+       id="rect190-7-7-9-6-6-3"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="m 2660,3449.9999 v -565 -20 h -210 v 20 h 190 v 565 z" />
+    <rect
+       id="rect190-7-7-9-6-1-4-6-4-6-7"
+       width="20"
+       height="1465"
+       x="1740"
+       y="-3450"
+       style="fill:#999999;stroke-width:2.40876;stroke-dasharray:none"
+       transform="rotate(90)" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-2"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="m 2135,3449.9999 v -565 -20 h -135 v 20 h 115 v 565 z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9-8"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="m 3450,2584.9999 h -565 -20 v -135 h 20 v 115 h 565 z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9-9-8"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="m 3450,2134.9999 h -565 -20 v -135 h 20 v 115 h 565 z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-2"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="m 2285,3449.9999 v -1015 -20 h -285 v 20 h 265 v 1015 z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9-3"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="m 3450,2284.9999 h -1015 -20 v -285 h 20 v 265 h 1015 z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9-2-0"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="m 3450,2734.9999 h -1015 -20 v -285 h 20 v 265 h 1015 z" />
+    <rect
+       id="rect190-7-7-9-6-1-2-8-4-1"
+       width="20"
+       height="210"
+       x="1965"
+       y="1740"
+       style="fill:#999999;stroke-width:0.911977;stroke-dasharray:none" />
+    <rect
+       id="rect190-68"
+       width="20"
+       height="99.999985"
+       x="165"
+       y="-3449.7998"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(90)" />
+    <rect
+       id="rect190-6-65"
+       width="19.999998"
+       height="100"
+       x="2864.8"
+       y="50.000122"
+       style="fill:#999999;stroke-width:0.629243" />
+    <rect
+       id="rect190-6-6-01"
+       width="19.999998"
+       height="100"
+       x="2414.8"
+       y="-150"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="scale(1,-1)" />
+    <rect
+       id="rect190-6-6-0-1"
+       width="19.999998"
+       height="100"
+       x="1964.8"
+       y="50.000122"
+       style="fill:#999999;stroke-width:0.629243" />
+    <rect
+       id="rect190-7-46"
+       width="20"
+       height="99.999985"
+       x="1065"
+       y="-3449.7998"
+       style="fill:#999999;stroke-width:0.629243"
+       transform="rotate(90)" />
+    <rect
+       id="rect190-7-7-0"
+       width="20"
+       height="99.999985"
+       x="1515"
+       y="-3449.7998"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none"
+       transform="rotate(90)" />
+    <rect
+       id="rect190-7-7-9-5"
+       width="20"
+       height="99.999985"
+       x="615"
+       y="-3449.7998"
+       style="fill:#999999;stroke-width:0.629325;stroke-dasharray:none"
+       transform="rotate(90)" />
+    <path
+       id="rect190-7-7-9-6-8"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="m 3449.8,389.99999 h -564.9999 -20 v 210 h 20 v -190 H 3449.8 Z" />
+    <path
+       id="rect190-7-7-9-6-6-6"
+       style="fill:#999999;stroke-width:0.911978;stroke-dasharray:none"
+       d="m 3449.8,839.99999 h -564.9999 -20 V 1050 h 20 V 859.99999 H 3449.8 Z" />
+    <rect
+       id="rect190-7-7-9-6-1-4-6-4-6-50"
+       width="19.999998"
+       height="1465"
+       x="1739.8"
+       y="50.000122"
+       style="fill:#999999;stroke-width:2.40876;stroke-dasharray:none" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-6"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="m 3449.8,1365 h -564.9999 -20 v 135 h 20 V 1385 H 3449.8 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9-4"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="m 2584.8001,49.999993 v 564.999997 20 h -135 v -20 h 115 V 49.999993 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-9-9-1"
+       style="fill:#999999;stroke-width:1.49589;stroke-dasharray:none"
+       d="m 2134.8002,49.999993 v 564.999997 20 h -135 v -20 h 115 V 49.999993 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-7"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="m 3449.8,1215 h -1014.9999 -20 v 285 h 20 V 1235 H 3449.8 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9-33"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="M 2284.8002,49.999993 V 1065 v 20 h -285 v -20 h 265 V 49.999993 Z" />
+    <path
+       id="rect190-7-7-9-6-1-5-1-0-8-9-2-8"
+       style="fill:#999999;stroke-width:2.00498;stroke-dasharray:none"
+       d="M 2734.8001,49.999993 V 1065 v 20 h -285 v -20 h 265 V 49.999993 Z" />
+    <rect
+       id="rect190-7-7-9-6-1-2-8-4-8"
+       width="20"
+       height="209.99997"
+       x="-1535"
+       y="1739.8"
+       style="fill:#999999;stroke-width:0.911977;stroke-dasharray:none"
+       transform="rotate(-90)" />
+  </g>
+</svg>
