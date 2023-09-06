@@ -41,3 +41,26 @@ def plot_csv(file_name: str, color="gray"):
         [plt.plot(*xy, color=color) for xy in lines]
 
     plt.show()
+
+
+def read_plot_csv(csv_path: str):
+    # 変換したCSVファイルを読み込む関数
+    data = (
+        pd.read_csv(
+            csv_path,
+            names=["x", "y", "mode", "velocity"],
+            dtype={"x": float, "y": float, "mode": str, "velocity": float},
+            comment="#",
+        )
+        .dropna()
+        .reset_index()
+    )
+
+    # 折線の座標を抽出する。
+    # 'mode'列の文字を連結してmodesとしたのち、
+    # 正規表現を用いてMLLL...となるひと続きの折線の座標を抽出する。
+    modes = "".join(data["mode"].tolist())
+    lines_span = [m.span() for m in re.finditer(r"ML+", modes)]
+    lines = [data.loc[start : end - 1, "x":"y"].values.T for start, end in lines_span]
+
+    return lines
