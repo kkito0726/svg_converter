@@ -23,12 +23,17 @@
 
 ### 2. SVG ファイルを CSV へ変換
 
+- Google Drive のマイドライブ直下に細胞班共有ドライブに入っている svgpy フォルダをダウンロードする。
+
 Google colaboratory で以下を実行
 
 ```python
 # パッケージのインストール
-!pip install git+https://github.com/miute/svgpy
 !pip install git+https://github.com/kkito0726/svg_converter.git
+!pip install cssselect
+
+# ディレクトリの移動
+%cd ./drive/MyDrive/
 ```
 
 ```python
