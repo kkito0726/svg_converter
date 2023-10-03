@@ -36,8 +36,6 @@ Google colaboratory で以下を実行
 %cd ./drive/MyDrive/
 ```
 
-### 電極と一緒にプロット
-
 ```python
 from svg2csv import *
 import os
@@ -53,6 +51,8 @@ svg2csv(filename, float(power), int(velocity))
 csv_path = os.path.splitext(filename)[0] + ".csv"
 plot_csv(csv_path, color="gradation")
 ```
+
+### 電極と一緒にプロット
 
 ```python
 import pandas as pd
