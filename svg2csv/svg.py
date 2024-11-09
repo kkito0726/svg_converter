@@ -53,6 +53,7 @@ def svg2csv(file_name: str, power: float, velocity: int) -> None:
         translate = [0, 0]
     else:
         translate = re.split("[(),]", translate)[1:3]
+        translate = [item if item else "0" for item in translate]
         translate = [float(i) for i in translate]
 
     width = float(root.get_elements_by_tag_name("svg")[0].attrib["width"])
