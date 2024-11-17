@@ -1,5 +1,6 @@
 LaRC_logo.csv
 LaRC_logo.svg
+svgpy
 svg2csv/test.ipynb
 svg2csv/__pycache__
 .DS_Store
