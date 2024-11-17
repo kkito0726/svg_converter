@@ -35,7 +35,7 @@ def svg2cmd(file_name: str) -> List[List[str]]:
     return commands
 
 
-def svg2csv(file_name: str, power: float, velocity: int) -> None:
+def svg2csv(file_name: str, power: float, velocity: int) -> str:
     # svgデータからamc_plot用の座標データを作成する関数
     # file_name: svgファイル（Inkscape上で全てのオブジェクトの
     #            グループ化を解除し、輪郭線などのベジエ曲線は除去しておくこと）
@@ -94,3 +94,5 @@ def svg2csv(file_name: str, power: float, velocity: int) -> None:
     # ファイルの書き出し
     out_name = os.path.splitext(file_name)[0] + ".csv"
     pd.DataFrame(data).to_csv(out_name, header=False, index=False)
+
+    return out_name
