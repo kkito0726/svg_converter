@@ -12,7 +12,9 @@ class ConvertService:
         csv_local_path, csv_buf = svg2csv(svg_path, float(power), int(speed))
         plot_base64_image = plot_csv(csv_local_path, "gradation")
 
-        csv_url = MinioRepository.save_csv(csv_buf, os.path.basename(csv_local_path))
+        csv_url = MinioRepository.save_csv(
+            csv_buf, os.path.basename(csv_local_path), power, speed
+        )
 
         delete_all_files_in_directory("./uploads")
 

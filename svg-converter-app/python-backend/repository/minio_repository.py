@@ -1,4 +1,5 @@
 import io
+
 from s3 import minio_client
 from urllib.parse import urlparse
 
@@ -7,7 +8,7 @@ BUCKET_NAME = "output-csv"
 
 class MinioRepository:
     @staticmethod
-    def save_csv(csv_buf: io.StringIO, csv_name):
+    def save_csv(csv_buf: io.StringIO, csv_name, power, speed):
         ensure_bucket_exists(BUCKET_NAME)
         minio_client.put_object(
             BUCKET_NAME,
@@ -17,7 +18,7 @@ class MinioRepository:
             content_type="text/csv",
         )
 
-        csv_url = f"http://localhost:9000/{BUCKET_NAME}/{csv_name}"
+        csv_url = f"http://localhost:9003/{BUCKET_NAME}/{power}W_{speed}_{csv_name}"
         return csv_url
 
 

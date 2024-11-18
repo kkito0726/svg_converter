@@ -19,14 +19,15 @@ export const ResFigure: React.FC<FigureProps> = ({
     }
   };
 
-  const handleDownloadImage = (img_url: string) => {
+  const handleDownloadCSV = (csv_url: string) => {
     const link = document.createElement("a");
-    link.href = img_url;
-    link.download = "image.png";
+    link.href = csv_url;
+    link.download = "data.csv"; // Change the file name and extension to .csv
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
   return (
     <>
       <div className="flex flex-col">
@@ -50,12 +51,14 @@ export const ResFigure: React.FC<FigureProps> = ({
                         converterResponse.plot_base64_image
                     )
                   }
-                  className="text-gray-400 rounded-sm px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-200 hover:text-gray-500"
+                  className="text-slate-200 rounded-sm px-2 py-1 group-hover:opacity-100 transition-opacity hover:bg-gray-200 hover:text-gray-500"
                 ></button>
                 <button
-                  onClick={() => handleDownloadImage(converterResponse.csv_url)}
-                  className="text-gray-400 rounded-sm px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-200 hover:text-gray-500"
-                ></button>
+                  onClick={() => handleDownloadCSV(converterResponse.csv_url)}
+                  className="text-slate-200 bg-cyan-500 rounded-sm px-2 py-1 transition-opacity hover:bg-cyan-600"
+                >
+                  Download AMC Plot CSV File
+                </button>
               </div>
             </div>
           </div>
