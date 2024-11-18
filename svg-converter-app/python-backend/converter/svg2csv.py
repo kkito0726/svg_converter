@@ -67,7 +67,10 @@ def svg2csv(file_name: str, power: float, velocity: int) -> tuple[str, io.String
     out_name = os.path.splitext(file_name)[0] + ".csv"
     pd.DataFrame(data).to_csv(out_name, header=False, index=False)
 
-    csv_buffer = io.StringIO()
-    pd.DataFrame(data).to_csv(csv_buffer, header=False, index=False)
+    csv_buffer = io.BytesIO()
+    pd.DataFrame(data).to_csv(csv_buffer, header=False, index=False, encoding="utf-8")
+
+    # ストリーム位置を先頭に戻す
+    csv_buffer.seek(0)
 
     return out_name, csv_buffer

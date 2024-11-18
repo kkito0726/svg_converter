@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import os
 import json
 from service.converter_service import ConvertService
@@ -11,19 +11,23 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/svg2csv", methods=["POST"])
 def upload_file():
-    amc_data = request.form.get("amc_data")
-    if amc_data:
+    json_data = request.form.get("json_data")
+    if json_data:
         try:
-            amc_data = json.loads(amc_data)
-            power = amc_data["power"]
-            speed = amc_data["speed"]
+            json_data = json.loads(json_data)
+            power = json_data["power"]
+            speed = json_data["speed"]
 
         except json.JSONDecodeError:
             return {"error": "Invalid JSON format"}, 400
     else:
         return {"error": "amc_data is required"}, 400
 
-    return ConvertService.convert(float(power), int(speed)), 200
+    res = ConvertService.convert(float(power), int(speed))
+    return (
+        jsonify({"csv_url": res.csv_url, "plot_base64_image": res.plot_base64_image}),
+        200,
+    )
 
 
 CORS(

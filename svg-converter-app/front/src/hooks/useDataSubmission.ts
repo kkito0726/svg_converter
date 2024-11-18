@@ -58,7 +58,7 @@ export const useDataSubmission = () => {
       formData.append("file", svgFile.svgFile);
       formData.append("json_data", JSON.stringify(values));
 
-      const res = await fetch("http://localhost:5000/upload", {
+      const res = await fetch("http://localhost:5002/svg2csv", {
         method: "POST",
         body: formData,
       });

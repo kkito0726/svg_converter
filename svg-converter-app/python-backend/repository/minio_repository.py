@@ -2,7 +2,7 @@ import io
 from s3 import minio_client
 from urllib.parse import urlparse
 
-BUCKET_NAME = "output_csv"
+BUCKET_NAME = "output-csv"
 
 
 class MinioRepository:
@@ -17,7 +17,7 @@ class MinioRepository:
             content_type="text/csv",
         )
 
-        csv_url = f"http://localhost:9003/{BUCKET_NAME}/{csv_name}"
+        csv_url = f"http://localhost:9000/{BUCKET_NAME}/{csv_name}"
         return csv_url
 
 
