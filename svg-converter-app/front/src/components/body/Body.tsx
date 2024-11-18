@@ -11,8 +11,10 @@ export const Body: React.FC<BodyProps> = ({ pageName }) => {
     values,
     isPost,
     converterResponse,
+    svgFile,
     handleChange,
     handleInitialize,
+    handleSvg,
     handleSubmit,
   } = useDataSubmission();
 
@@ -40,11 +42,24 @@ export const Body: React.FC<BodyProps> = ({ pageName }) => {
           </button>
           <input
             ref={fileInputRef}
-            // onChange={handleBioInput}
+            onChange={handleSvg}
             type="file"
             accept=".svg"
             className="hidden"
           />
+          {svgFile.svgName ? (
+            <div className="flex flex-col pb-2">
+              <div className="flex justify-between">
+                <div>
+                  <span className="text-gray-300">{svgFile.svgName}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <span className="text-gray-300">
+              ファイルが読み込まれていません
+            </span>
+          )}
         </div>
         <Form
           values={values}
