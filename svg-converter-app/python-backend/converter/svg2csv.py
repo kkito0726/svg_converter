@@ -1,4 +1,4 @@
-import io, os
+import os
 import re
 
 import pandas as pd
@@ -7,7 +7,7 @@ from svgpy import SVGParser
 from svg2csv.svg import svg2cmd
 
 
-def svg2csv(file_name: str, power: float, velocity: int) -> tuple[str, io.StringIO]:
+def svg2csv(file_name: str, power: float, velocity: int) -> str:
     # svgデータからamc_plot用の座標データを作成する関数
     # file_name: svgファイル（Inkscape上で全てのオブジェクトの
     #            グループ化を解除し、輪郭線などのベジエ曲線は除去しておくこと）
@@ -63,14 +63,13 @@ def svg2csv(file_name: str, power: float, velocity: int) -> tuple[str, io.String
 
         data.append(["", "", "", ""])
 
+    output_dir = "./static"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     # ファイルの書き出し
-    out_name = os.path.splitext(file_name)[0] + ".csv"
-    pd.DataFrame(data).to_csv(out_name, header=False, index=False)
+    out_name = os.path.splitext(os.path.basename(file_name))[0]
+    out_csv_path = f"./static/{power}W_{velocity}_{out_name}.csv"
+    pd.DataFrame(data).to_csv(out_csv_path, header=False, index=False)
 
-    csv_buffer = io.BytesIO()
-    pd.DataFrame(data).to_csv(csv_buffer, header=False, index=False, encoding="utf-8")
-
-    # ストリーム位置を先頭に戻す
-    csv_buffer.seek(0)
-
-    return out_name, csv_buffer
+    return out_csv_path

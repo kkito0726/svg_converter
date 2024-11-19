@@ -2,23 +2,20 @@ import os
 from converter.svg2csv import svg2csv
 from converter.svg_uploader import svg_upload
 from converter.plot_csv import plot_csv
-from repository.minio_repository import MinioRepository
 from converter.converter_response import ConverterResponse
 
 
 class ConvertService:
     def convert(power: float, speed: int) -> ConverterResponse:
         svg_path = svg_upload()
-        csv_local_path, csv_buf = svg2csv(svg_path, float(power), int(speed))
+        csv_local_path = svg2csv(svg_path, float(power), int(speed))
         plot_base64_image = plot_csv(csv_local_path, "gradation")
-
-        csv_url = MinioRepository.save_csv(
-            csv_buf, os.path.basename(csv_local_path), power, speed
-        )
 
         delete_all_files_in_directory("./uploads")
 
-        return ConverterResponse(csv_url, plot_base64_image)
+        return ConverterResponse(
+            f"http://localhost:5002{csv_local_path[1:]}", plot_base64_image
+        )
 
 
 def delete_all_files_in_directory(directory_path):
