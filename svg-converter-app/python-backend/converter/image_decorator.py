@@ -1,9 +1,10 @@
 import matplotlib
 
 matplotlib.use("Agg")  # GUIバックエンドを使用しないように設定
-import matplotlib.pyplot as plt
-import io
 import base64
+import io
+
+import matplotlib.pyplot as plt
 
 
 # base64でグラフを変換する

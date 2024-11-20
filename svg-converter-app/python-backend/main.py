@@ -1,6 +1,7 @@
-from svg2csv.svg import svg2csv
-from svg2csv.plot import plot_csv
 import os
+
+from svg2csv.plot import plot_csv
+from svg2csv.svg import svg2csv
 
 if __name__ == "__main__":
     filename = input("ファイルパスの入力: ")

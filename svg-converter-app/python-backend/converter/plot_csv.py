@@ -1,8 +1,11 @@
-import pandas as pd
-import re, base64, io
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
+import base64
+import io
+import re
+
 import matplotlib
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import pandas as pd
 
 matplotlib.use("Agg")  # GUIバックエンドを使用しないように設定
 

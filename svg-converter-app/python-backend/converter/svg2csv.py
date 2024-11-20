@@ -2,9 +2,9 @@ import os
 import re
 
 import pandas as pd
+from svg2csv.svg import svg2cmd
 
 from svgpy import SVGParser
-from svg2csv.svg import svg2cmd
 
 
 def svg2csv(file_name: str, power: float, velocity: int) -> str:

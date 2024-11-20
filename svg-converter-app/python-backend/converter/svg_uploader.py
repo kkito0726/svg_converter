@@ -1,5 +1,6 @@
-from flask import request
 import os
+
+from flask import request
 
 UPLOAD_FOLDER = "./uploads"
 
