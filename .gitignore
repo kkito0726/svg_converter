@@ -4,3 +4,5 @@ svgpy
 svg2csv/test.ipynb
 svg2csv/__pycache__
 .DS_Store
+.idea
+test.svg
