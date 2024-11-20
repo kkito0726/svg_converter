@@ -1,4 +1,10 @@
 services:
+  react-frontend:
+    build: ./react-frontend
+    tty: true
+    ports:
+      - "4174:4173"
+
   python-backend:
     build: ./python-backend
     tty: true

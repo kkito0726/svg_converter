@@ -3,10 +3,7 @@ import { useDataSubmission } from "../../hooks/useDataSubmission";
 import { ResFigure } from "../figure/ResFigure";
 import { Form } from "./form/Form";
 
-type BodyProps = {
-  pageName: string;
-};
-export const Body: React.FC<BodyProps> = ({ pageName }) => {
+export const Body: React.FC = () => {
   const {
     values,
     isPost,

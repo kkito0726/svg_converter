@@ -10,7 +10,7 @@ export const Converter = () => {
         <Topbar displayName="SVGをAMC描画用CSVへ変換" />
         <div className="flex">
           <Sidebar name={PageName.CONVERTER} />
-          <Body pageName={PageName.CONVERTER} />
+          <Body />
         </div>
       </div>
     </div>
