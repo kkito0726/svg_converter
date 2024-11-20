@@ -4,7 +4,7 @@ WORKDIR /usr/src/server
 
 COPY . .
 
-RUN apt-get update \
+RUN mkdir static && apt-get update \
  && apt-get install -y fontconfig \
  && pip install --upgrade pip \
  && pip install -r requirements.txt

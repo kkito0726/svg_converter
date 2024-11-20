@@ -1,3 +1,4 @@
+import { handleDownloadCSV } from "../../hooks/download";
 import { ConverterResponse } from "../../types/ConverterResponse";
 import { Processing } from "../Processing";
 
@@ -17,15 +18,6 @@ export const ResFigure: React.FC<FigureProps> = ({
     } catch (error) {
       console.error("Failed to copy image: ", error);
     }
-  };
-
-  const handleDownloadCSV = (csv_url: string) => {
-    const link = document.createElement("a");
-    link.href = csv_url;
-    link.download = csv_url.split("/").pop() || "data.csv"; // Change the file name and extension to .csv
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   return (
