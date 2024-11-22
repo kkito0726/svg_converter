@@ -30,7 +30,7 @@ svg_converter/svg-converter-app/python-backend の中に細胞班共有フォル
 docker コンテナの起動
 
 ```bash
-cd ~Workspace/svg_converter/svg-converter-app
+cd ~/Workspace/svg_converter/svg-converter-app
 docker compose up -d --build
 ```
 
@@ -39,8 +39,8 @@ docker compose up -d --build
 アップデート方法
 
 ```bash
-cd ~Workspace/svg_converter
+cd ~/Workspace/svg_converter
 git pull
-cd ~Workspace/svg_converter/svg-converter-app
+cd ~/Workspace/svg_converter/svg-converter-app
 docker compose up -d --build
 ```
