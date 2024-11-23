@@ -66,31 +66,35 @@ def convert_svg_csv(file_name: str, power: float, velocity: int):
     width = float(root.attrib["width"])
     height = float(root.attrib["height"])
 
+    # power設定
+    data = []
+    data.append(["#power", power, "", ""])
+
     # 描画データ変換
     paths = svg2cmd(file_name)
-    data = []
-    data.append(["#power", power, "", ""])  # Power設定
-
     for path in paths:
         for command in path:
-            if command.startswith("M"):  # 移動
-                x, y = map(float, command[1:].split(","))
+            if command[0] == "M":
+                mode = "M"
+                x, y = [float(i) for i in command[1:].split(",")]
                 x0, y0 = x, y
-            elif command.startswith("L"):  # 直線
-                x, y = map(float, command[1:].split(","))
-            elif command.startswith("Z"):  # 終端
+            elif command[0] == "L":
+                mode = "L"
+                x, y = [float(i) for i in command[1:].split(",")]
+            elif command[0] == "Z":
+                mode = "L"
                 x, y = x0, y0
             else:
-                x, y = map(float, command.split(","))
+                mode = "L"
+                x, y = [float(i) for i in command[:].split(",")]
 
-            # translateを適用し、中心座標を補正
-            x = x + translate[0] - width / 2
-            y = y + translate[1] - height / 2
+            x, y = x + translate[0] - width / 2, y + translate[1] - height / 2
+            # InkscapeとAMCでは座標系が天地逆なのを修正
+            # Inkscapeは左上が原点でy軸は下向き
+            # amc_plotは左下が原点でy軸は上向き
+            # data.append([x, y, mode, velocity])
+            data.append([x, -y, mode, velocity])
 
-            # y座標系をAMCに合わせる
-            data.append([x, -y, "L", velocity])
-
-        # 空行でパスを区切る
         data.append(["", "", "", ""])
 
     return data
