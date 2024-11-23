@@ -47,7 +47,7 @@ def svg2cmd(file_name: str) -> list[list[str]]:
     return commands
 
 
-def svg2csv(file_name: str, power: float, velocity: int) -> str:
+def convert_svg_csv(file_name: str, power: float, velocity: int):
     """
     SVGデータからAMCプロット用の座標データを作成する関数
     """
@@ -94,7 +94,9 @@ def svg2csv(file_name: str, power: float, velocity: int) -> str:
         data.append(["", "", "", ""])
 
     # CSVとして保存
-    out_name = os.path.splitext(file_name)[0] + ".csv"
-    pd.DataFrame(data).to_csv(out_name, header=False, index=False)
+    return os.path.splitext(file_name)[0] + ".csv", data
 
-    return out_name
+
+def svg2csv(file_name: str, power: float, velocity: int) -> None:
+    out_name, data = convert_svg_csv(file_name, power, velocity)
+    pd.DataFrame(data).to_csv(out_name, header=False, index=False)
