@@ -2,7 +2,7 @@ import os
 
 from converter.converter_response import ConverterResponse
 from converter.plot_csv import plot_csv
-from converter.svg2csv import svg2csv
+from svg2csv.svg import svg2csv
 from converter.svg_uploader import svg_upload
 from service.csv_service import delete_all_files_in_directory
 

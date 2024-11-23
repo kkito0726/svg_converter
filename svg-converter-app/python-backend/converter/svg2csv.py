@@ -3,7 +3,6 @@ import re
 
 import pandas as pd
 from svg2csv.svg import svg2cmd
-
 from svgpy import SVGParser
 
 
