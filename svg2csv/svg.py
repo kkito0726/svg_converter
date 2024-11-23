@@ -93,10 +93,10 @@ def convert_svg_csv(file_name: str, power: float, velocity: int):
         # 空行でパスを区切る
         data.append(["", "", "", ""])
 
-    # CSVとして保存
-    return os.path.splitext(file_name)[0] + ".csv", data
+    return data
 
 
 def svg2csv(file_name: str, power: float, velocity: int) -> None:
-    out_name, data = convert_svg_csv(file_name, power, velocity)
+    data = convert_svg_csv(file_name, power, velocity)
+    out_name = os.path.splitext(file_name)[0] + ".csv"
     pd.DataFrame(data).to_csv(out_name, header=False, index=False)
