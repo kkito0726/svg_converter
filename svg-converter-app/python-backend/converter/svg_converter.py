@@ -1,6 +1,7 @@
-from svg2csv.svg import convert_svg_csv
-import pandas as pd
 import os
+
+import pandas as pd
+from svg2csv.svg import convert_svg_csv
 
 
 def svg_converter(file_name: str, power: float, velocity: int) -> str:
