@@ -74,20 +74,8 @@ def convert_svg_csv(file_name: str, power: float, velocity: int):
     paths = svg2cmd(file_name)
     for path in paths:
         for command in path:
-            if command[0] == "M":
-                mode = "M"
-                x, y = [float(i) for i in command[1:].split(",")]
-                x0, y0 = x, y
-            elif command[0] == "L":
-                mode = "L"
-                x, y = [float(i) for i in command[1:].split(",")]
-            elif command[0] == "Z":
-                mode = "L"
-                x, y = x0, y0
-            else:
-                mode = "L"
-                x, y = [float(i) for i in command[:].split(",")]
-
+            x, y = [float(i) for i in command[1:].split(",")]
+            mode = "M" if command[0] == "M" else "L"
             x, y = x + translate[0] - width / 2, y + translate[1] - height / 2
             # InkscapeとAMCでは座標系が天地逆なのを修正
             # Inkscapeは左上が原点でy軸は下向き
