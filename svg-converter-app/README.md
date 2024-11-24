@@ -30,17 +30,17 @@ svg_converter/svg-converter-app/python-backend の中に細胞班共有フォル
 docker コンテナの起動
 
 ```bash
-cd ~Workspace/svg_converter/svg-converter-app
+cd ~/Workspace/svg_converter/svg-converter-app
 docker compose up -d --build
 ```
 
-完了したら Docker Desktop の svg-converter-app の中の react-frontend の4174:4173と書いてあるリンクを押す (環境構築した後は常にここから起動)
+完了したら Docker Desktop の svg-converter-app の中の react-frontend の 4174:4173 と書いてあるリンクを押す (環境構築した後は常にここから起動)
 
 アップデート方法
 
 ```bash
-cd ~Workspace/svg_converter
+cd ~/Workspace/svg_converter
 git pull
-cd ~Workspace/svg_converter/svg-converter-app
+cd ~/Workspace/svg_converter/svg-converter-app
 docker compose up -d --build
 ```
