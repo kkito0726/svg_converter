@@ -58,8 +58,11 @@ def convert_svg_csv(file_name: str, power: float, velocity: int):
 
     # translate情報を取得
     transform = root.find(".//svg:g", namespaces).attrib.get("transform", "")
-    translate = re.split("[(),]", transform)[1:3]
-    translate = [float(item) if item else float(0) for item in translate]
+    if transform:
+        translate = re.split("[(),]", transform)[1:3]
+        translate = [float(item) if item else float(0) for item in translate]
+    else:
+        translate = [0., 0.]
 
     # SVG全体のサイズを取得
     svg_elem = root.find(".//svg:svg", namespaces)
