@@ -18,15 +18,6 @@ cd ~/Workspace
 git clone https://github.com/kkito0726/svg_converter.git
 ```
 
-svg_converter/svg-converter-app/python-backend の中に細胞班共有フォルダにある svgpy ファルダをコピーしてくる
-
-```
---- svg_converter
-    --- svg-converter-app
-        --- python-backend
-            --- svgpy
-```
-
 docker コンテナの起動
 
 ```bash
