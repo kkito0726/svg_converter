@@ -4,7 +4,8 @@ WORKDIR /usr/src/server
 
 COPY . .
 
-RUN pip install --upgrade pip \
+RUN rm -rf static && mkdir static \
+ && pip install --upgrade pip \
  && pip install -r requirements.txt
 
 CMD [ "python", "app.py" ]
