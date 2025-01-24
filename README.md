@@ -8,6 +8,31 @@
 
 > [Axidraw Software Installation](https://wiki.evilmadscientist.com/Axidraw_Software_Installation)
 
+### 3. SVG Converterの環境構築
+
+アプリケーションを docker-compose で動かす。
+
+1. [Git install](https://qiita.com/T-H9703EnAc/items/4fbe6593d42f9a844b1c)
+2. [Docker Desktop install](https://docs.docker.com/get-docker/)
+3. Docker Desktop を起動した状態で、git bash (Git インストール時に同時に入る)で以下のコマンドを実行
+
+初回のみ
+
+```bash
+mkdir ~/Workspace
+cd ~/Workspace
+git clone https://github.com/kkito0726/svg_converter.git
+```
+
+docker コンテナの起動
+
+```bash
+cd ~/Workspace/svg_converter/svg-converter-app
+docker compose up -d --build
+```
+
+完了したら Docker Desktop の svg-converter-app の中の react-frontend の 4174:4173 と書いてあるリンクを押す (環境構築した後は常にここから起動)
+
 ## 使い方
 
 ### 1. inkscape の使い方
@@ -23,76 +48,10 @@
 
 ### 2. SVG ファイルを CSV へ変換
 
-- Google Drive のマイドライブ直下に細胞班共有ドライブに入っている svgpy フォルダをダウンロードする。
-
-Google colaboratory で以下を実行
-
-```python
-# パッケージのインストール
-!pip install git+https://github.com/kkito0726/svg_converter.git
-!pip install cssselect
-
-# ディレクトリの移動
-%cd ./drive/MyDrive/
-```
-
-```python
-from svg2csv import *
-import os
-
-filename = input("ファイルパスの入力: ")
-power = input("レーザーパワーの入力 (W): ")
-velocity = input("ステージの速度を入力 (μm/s): ")
-
-# CSVへ変換
-svg2csv(filename, float(power), int(velocity))
-
-# 結果をプロット
-csv_path = os.path.splitext(filename)[0] + ".csv"
-plot_csv(csv_path, color="gradation")
-```
-
-### 電極と一緒にプロット
-
-```python
-import pandas as pd
-import matplotlib.pyplot as plt
-import re
-
-def read_plot_csv(csv_path: str):
-    data = (
-        pd.read_csv(
-            csv_path,
-            names=["x", "y", "mode", "velocity"],
-            dtype={"x": float, "y": float, "mode": str, "velocity": float},
-            comment="#",
-        )
-        .dropna()
-        .reset_index()
-    )
-
-    # 折線の座標を抽出する。
-    # 'mode'列の文字を連結してmodesとしたのち、
-    # 正規表現を用いてMLLL...となるひと続きの折線の座標を抽出する。
-    modes = "".join(data["mode"].tolist())
-    lines_span = [m.span() for m in re.finditer(r"ML+", modes)]
-    lines = [data.loc[start : end - 1, "x":"y"].values.T for start, end in lines_span]
-
-    return lines
-
-electrode = read_plot_csv("/content/drive/MyDrive/研究/inkscape/515/515_electrode_hatch.csv")
-glass = read_plot_csv("/content/drive/MyDrive/研究/inkscape/515/後加工/515_electrode_add_process.csv")
-
-# グラフを描画する。
-figure = plt.figure(figsize=(12, 12))
-ax = figure.add_subplot(111)
-ax.set_aspect("equal")
-
-[plt.plot(*xy, color="gray") for xy in electrode]
-[plt.plot(*xy, color="red") for xy in glass]
-
-plt.show()
-```
+1. アプリ左上のボタンから作成したSVGファイルをアップロードする
+2. Power (W)とSpeed (μm/s)を入力してSubmitボタンを押す
+3. 処理が終わると描画位置のグラフが出て、右下からCSVファイルをダウンロードできる
+4. 過去に変換したファイルはDownloads画面からダウンロードできる。使わないファイルは定期的に削除する
 
 ---
 
@@ -112,4 +71,12 @@ $ amc_plt csv_fileのパス　-c
 
 ```bash
 $ sudo shutdown -h now
+```
+## アップデート方法
+
+```bash
+cd ~/Workspace/svg_converter
+git pull
+cd ~/Workspace/svg_converter/svg-converter-app
+docker compose up -d --build
 ```
