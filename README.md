@@ -27,7 +27,7 @@ git clone https://github.com/kkito0726/svg_converter.git
 docker コンテナの起動
 
 ```bash
-cd ~/Workspace/svg_converter/svg-converter-app
+cd ~/Workspace/svg_converter
 docker compose up -d --build
 ```
 
@@ -77,6 +77,5 @@ $ sudo shutdown -h now
 ```bash
 cd ~/Workspace/svg_converter
 git pull
-cd ~/Workspace/svg_converter/svg-converter-app
 docker compose up -d --build
 ```
