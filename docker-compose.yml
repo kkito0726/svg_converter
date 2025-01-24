@@ -1,12 +1,12 @@
 services:
   react-frontend:
-    build: ./react-frontend
+    build: ./app/react-frontend
     tty: true
     ports:
       - "4174:4173"
 
   python-backend:
-    build: ./python-backend
+    build: ./app/python-backend
     tty: true
     ports:
       - "5002:5001"
