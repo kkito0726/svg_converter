@@ -7,7 +7,7 @@ on:
     paths:
       - "app/**"
       - ".github/workflows/docker-publish.yml"
-  # PR ではテストのみ実行する
+  # PR ではテスト・フロントエンドのビルド確認のみ実行する
   pull_request:
     branches: [main, "develop/**"]
     paths:
@@ -39,8 +39,25 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python -m pytest -q tests
 
+  build-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/react-frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/react-frontend/package-lock.json
+      - run: npm ci
+      # tsc -b による型チェックを含む
+      - run: npm run build
+      - run: npm audit --omit=dev --audit-level=high
+
   build:
-    needs: test-backend
+    needs: [test-backend, build-frontend]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
