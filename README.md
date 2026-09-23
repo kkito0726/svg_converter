@@ -58,13 +58,13 @@ docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 
 ### イメージの公開 (GitHub Actions)
 
-`main` への push (`app/` 配下の変更時) と `v*` タグの push で、`.github/workflows/docker-publish.yml` がテスト後に
-amd64 / arm64 のイメージをビルドして ghcr.io に公開する。
+`main` へのマージ (`app/` 配下の変更時) でのみ、`.github/workflows/docker-publish.yml` がテスト後に
+amd64 / arm64 のイメージをビルドして ghcr.io に公開する。PR ではテストのみ実行する。
 
 - `ghcr.io/kkito0726/svg-converter-backend`
 - `ghcr.io/kkito0726/svg-converter-frontend`
 
-タグは `latest` (main)、`sha-<短縮SHA>`、`<バージョン>` (v タグ時)。特定のバージョンに固定する場合は `.env` に `IMAGE_TAG` を設定する。
+タグは `latest` と `sha-<短縮SHA>`。特定のバージョンに固定する場合は `.env` に `IMAGE_TAG` を設定する。
 
 ## 使い方
 
