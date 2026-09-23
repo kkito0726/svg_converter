@@ -6,14 +6,20 @@ on:
     branches: [main]
     paths:
       - "app/**"
+      - "docker-compose*.yml"
       - ".github/workflows/docker-publish.yml"
   # PR ではテスト・フロントエンドのビルド確認のみ実行する
   pull_request:
     branches: [main, "develop/**"]
     paths:
       - "app/**"
+      - "docker-compose*.yml"
       - ".github/workflows/docker-publish.yml"
   workflow_dispatch:
+
+# 既定は読み取りのみ。イメージの push が必要なジョブだけ個別に packages: write を付与する
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,6 +45,20 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python -m pytest -q tests
 
+  check-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # 本番構成 (Cloudflare Tunnel) では、Access を迂回できるホストのポートを公開しないこと
+      - name: Deploy config publishes no host port for react-frontend
+        env:
+          CLOUDFLARE_TUNNEL_TOKEN: dummy
+        run: |
+          ports=$(docker compose -f docker-compose.yml -f docker-compose.deploy.yml config --format json \
+            | jq -c '.services["react-frontend"].ports // []')
+          echo "react-frontend ports: $ports"
+          test "$ports" = "[]"
+
   build-frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -57,7 +77,7 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
 
   build:
-    needs: [test-backend, build-frontend]
+    needs: [test-backend, build-frontend, check-compose]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:

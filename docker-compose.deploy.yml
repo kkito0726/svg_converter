@@ -4,6 +4,12 @@
 # 事前に同じディレクトリの .env に CLOUDFLARE_TUNNEL_TOKEN を設定しておく (.env.example 参照)
 # Cloudflare 側の Public Hostname のサービスは http://react-frontend:80 を指定する
 services:
+  # 公開は Cloudflare Tunnel (+ Cloudflare Access) 経由のみにする。
+  # ホストのポートを開けると Access を通らずに直接アクセスでき、レート制限キー (CF-Connecting-IP) も偽装できるため、
+  # ベースの docker-compose.yml の "4174:80" を打ち消す (Docker Compose v2.24 以降の !reset タグ)。
+  react-frontend:
+    ports: !reset []
+
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
