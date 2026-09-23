@@ -48,11 +48,13 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 4. 起動
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
-docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+docker compose -f docker-compose.deploy.yml pull
+docker compose -f docker-compose.deploy.yml up -d
 ```
 
 - アプリに認証機能はないため、利用者を限定する場合は Cloudflare Access でアクセス制限をかける
+- `docker-compose.deploy.yml` は単体で完結する本番用の構成で、ホストのポート (4174 など) を一切公開しない。アクセスは Tunnel 経由のみ (Access を迂回させないため)
+- 1 回の変換で扱える量には上限がある (SVG の要素 50,000 個・線分 200,000 本)。超えると 400 エラーになる
 - 変換 API は nginx でレート制限 (1 IP あたり 20 回/分) をかけている
 - `.env` はトークンを含むため Git の管理対象外 (`.gitignore` 済み)。コミットしないこと
 - 変換結果はディスクに保存しないため、ボリュームやファイル削除の運用は不要
@@ -124,6 +126,6 @@ docker compose up -d
 ```bash
 cd ~/Workspace/svg_converter
 git pull
-docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
-docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+docker compose -f docker-compose.deploy.yml pull
+docker compose -f docker-compose.deploy.yml up -d
 ```

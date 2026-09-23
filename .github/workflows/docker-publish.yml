@@ -6,14 +6,20 @@ on:
     branches: [main]
     paths:
       - "app/**"
+      - "docker-compose*.yml"
       - ".github/workflows/docker-publish.yml"
   # PR ではテスト・フロントエンドのビルド確認のみ実行する
   pull_request:
     branches: [main, "develop/**"]
     paths:
       - "app/**"
+      - "docker-compose*.yml"
       - ".github/workflows/docker-publish.yml"
   workflow_dispatch:
+
+# 既定は読み取りのみ。イメージの push が必要なジョブだけ個別に packages: write を付与する
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,6 +45,22 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python -m pytest -q tests
 
+  check-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # 本番構成 (Cloudflare Tunnel) は単体で完結し、Access を迂回できるホストのポートを一切公開しないこと
+      - name: Deploy config is standalone and publishes no host ports
+        env:
+          CLOUDFLARE_TUNNEL_TOKEN: dummy
+        run: |
+          docker compose -f docker-compose.deploy.yml config --format json > deploy.json
+          jq -r '.services | to_entries[] | "\(.key): ports=\(.value.ports // [] | tostring)"' deploy.json
+          jq -e '[.services[] | select((.ports // []) | length > 0)] | length == 0' deploy.json
+          jq -e '.services | has("react-frontend") and has("python-backend") and has("cloudflared")' deploy.json
+          # 研究室 PC 向け構成と別ファイルのため、バックエンドのハードニングが抜けていないことも確認する
+          jq -e '.services["python-backend"] | .read_only == true and (.mem_limit != null)' deploy.json
+
   build-frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -57,7 +79,7 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
 
   build:
-    needs: [test-backend, build-frontend]
+    needs: [test-backend, build-frontend, check-compose]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
