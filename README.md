@@ -32,7 +32,7 @@ docker compose pull
 docker compose up -d
 ```
 
-完了したら Docker Desktop の svg-converter-app の中の react-frontend の 4174:80 と書いてあるリンクを押す (環境構築した後は常にここから起動)
+完了したらブラウザで http://localhost:4174 を開く (Docker Desktop の svg_converter の中の react-frontend の 4174:80 と書いてあるリンクからも開ける)
 
 #### 開発時 (ローカルのソースからビルドする)
 
@@ -54,6 +54,7 @@ docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 
 - アプリに認証機能はないため、利用者を限定する場合は Cloudflare Access でアクセス制限をかける
 - 変換 API は nginx でレート制限 (1 IP あたり 20 回/分) をかけている
+- `.env` はトークンを含むため Git の管理対象外 (`.gitignore` 済み)。コミットしないこと
 - 変換結果はディスクに保存しないため、ボリュームやファイル削除の運用は不要
 
 ### イメージの公開 (GitHub Actions)
@@ -81,9 +82,9 @@ amd64 / arm64 のイメージをビルドして ghcr.io に公開する。PR で
 
 ### 2. SVG ファイルを CSV へ変換
 
-1. アプリ左上のボタンから作成したSVGファイルをアップロードする
-2. Power (W)とSpeed (μm/s)を入力してSubmitボタンを押す
-3. 処理が終わると描画位置のグラフが出て、右下からCSVファイルをダウンロードできる
+1. 「01 · Input」の枠に作成した SVG ファイルをドラッグ&ドロップする (クリックしてファイルを選択してもよい)。読み込んだファイルはサムネイル・ファイル名・サイズ付きで表示される
+2. 「02 · Parameters」でレーザーパワー (W) とステージ速度 (μm/s) を入力して「CSVに変換」を押す
+3. 変換が終わると描画順 (青→赤) のプレビューが表示され、「CSVをダウンロード」から CSV を保存できる
 
 > サーバーは変換結果を一切保存しない（ステートレス）。ダウンロードURLはブラウザ内だけで有効な一時URLなので、
 > ページを再読み込みしたり次の変換を実行すると消える。必要なCSVはその場でダウンロードしておくこと。
@@ -108,6 +109,17 @@ $ amc_plt csv_fileのパス　-c
 $ sudo shutdown -h now
 ```
 ## アップデート方法
+
+研究室の PC などで使う場合
+
+```bash
+cd ~/Workspace/svg_converter
+git pull
+docker compose pull
+docker compose up -d
+```
+
+自宅サーバー (Cloudflare Tunnel で公開している場合)
 
 ```bash
 cd ~/Workspace/svg_converter
