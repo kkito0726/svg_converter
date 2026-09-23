@@ -1,9 +1,7 @@
 export const Footer = () => {
   return (
-    <footer className="flex justify-center text-slate-200 p-5 text-xl">
-      <span>
-        Powered by LaR<span className="text-green-400">Code</span>
-      </span>
+    <footer className="font-display text-sm tracking-wide text-muted">
+      Powered by LaR<span className="text-emerald-400">Code</span>
     </footer>
   );
 };
