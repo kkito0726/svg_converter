@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- 左上のロゴ (Topbar の IconCrosshair) と同じデザイン -->
+  <rect x="0.5" y="0.5" width="31" height="31" rx="7.5" fill="#0a0c0f" />
+  <rect x="0.5" y="0.5" width="31" height="31" rx="7.5" fill="rgb(34 211 238 / 0.12)" stroke="rgb(34 211 238 / 0.45)" />
+  <g transform="translate(5 5) scale(0.9167)" fill="none" stroke="#22d3ee" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="7" />
+    <path d="M12 2v5m0 10v5M2 12h5m10 0h5" />
+  </g>
+</svg>
