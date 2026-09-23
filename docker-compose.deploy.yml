@@ -1,14 +1,33 @@
-# 本番 (自宅サーバー) 用: ghcr.io のイメージ + Cloudflare Tunnel で公開する
-#   docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
-#   docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+# 本番 (自宅サーバー) 用: ghcr.io のイメージ + Cloudflare Tunnel で公開する (このファイル単体で使う)
+#   docker compose -f docker-compose.deploy.yml pull
+#   docker compose -f docker-compose.deploy.yml up -d
 # 事前に同じディレクトリの .env に CLOUDFLARE_TUNNEL_TOKEN を設定しておく (.env.example 参照)
 # Cloudflare 側の Public Hostname のサービスは http://react-frontend:80 を指定する
+#
+# 公開は Cloudflare Tunnel (+ Cloudflare Access) 経由のみ。どのサービスもホストのポートを公開しない。
+# (ポートを開けると Access を迂回でき、レート制限キー CF-Connecting-IP も偽装できるため)
+# 研究室 PC 向けの docker-compose.yml とは独立しているので、設定を変える場合は両方を見直すこと。
 services:
-  # 公開は Cloudflare Tunnel (+ Cloudflare Access) 経由のみにする。
-  # ホストのポートを開けると Access を通らずに直接アクセスでき、レート制限キー (CF-Connecting-IP) も偽装できるため、
-  # ベースの docker-compose.yml の "4174:80" を打ち消す (Docker Compose v2.24 以降の !reset タグ)。
   react-frontend:
-    ports: !reset []
+    image: ghcr.io/kkito0726/svg-converter-frontend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      - python-backend
+    mem_limit: 128m
+
+  # react-frontend (nginx) の /api 経由でのみアクセスする
+  # 変換結果は保存しないためボリュームは不要 (ステートレス)
+  python-backend:
+    image: ghcr.io/kkito0726/svg-converter-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    expose:
+      - "5001"
+    environment:
+      - MAX_UPLOAD_MB=20
+    mem_limit: 1g
+    read_only: true
+    tmpfs:
+      - /tmp
 
   cloudflared:
     image: cloudflare/cloudflared:latest

@@ -49,15 +49,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # 本番構成 (Cloudflare Tunnel) では、Access を迂回できるホストのポートを公開しないこと
-      - name: Deploy config publishes no host port for react-frontend
+      # 本番構成 (Cloudflare Tunnel) は単体で完結し、Access を迂回できるホストのポートを一切公開しないこと
+      - name: Deploy config is standalone and publishes no host ports
         env:
           CLOUDFLARE_TUNNEL_TOKEN: dummy
         run: |
-          ports=$(docker compose -f docker-compose.yml -f docker-compose.deploy.yml config --format json \
-            | jq -c '.services["react-frontend"].ports // []')
-          echo "react-frontend ports: $ports"
-          test "$ports" = "[]"
+          docker compose -f docker-compose.deploy.yml config --format json > deploy.json
+          jq -r '.services | to_entries[] | "\(.key): ports=\(.value.ports // [] | tostring)"' deploy.json
+          jq -e '[.services[] | select((.ports // []) | length > 0)] | length == 0' deploy.json
+          jq -e '.services | has("react-frontend") and has("python-backend") and has("cloudflared")' deploy.json
+          # 研究室 PC 向け構成と別ファイルのため、バックエンドのハードニングが抜けていないことも確認する
+          jq -e '.services["python-backend"] | .read_only == true and (.mem_limit != null)' deploy.json
 
   build-frontend:
     runs-on: ubuntu-latest
