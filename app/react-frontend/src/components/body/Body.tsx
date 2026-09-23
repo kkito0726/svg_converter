@@ -8,6 +8,7 @@ export const Body: React.FC = () => {
     values,
     isPost,
     converterResponse,
+    errorMessage,
     svgFile,
     handleChange,
     handleInitialize,
@@ -58,6 +59,11 @@ export const Body: React.FC = () => {
             </span>
           )}
         </div>
+        {errorMessage ? (
+          <p className="mx-4 mb-2 px-3 py-2 text-sm text-red-200 bg-red-900 rounded-md">
+            {errorMessage}
+          </p>
+        ) : null}
         <Form
           values={values}
           handleChange={handleChange}

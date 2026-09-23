@@ -6,8 +6,8 @@ cssselect==1.2.0
 cycler==0.12.1
 et_xmlfile==2.0.0
 Flask==3.1.0
-Flask-Cors==5.0.0
 fonttools==4.55.0
+gunicorn==23.0.0
 itsdangerous==2.2.0
 Jinja2==3.1.4
 kiwisolver==1.4.7

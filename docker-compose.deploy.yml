@@ -1,0 +1,15 @@
+# 本番 (自宅サーバー) 用: ghcr.io のイメージ + Cloudflare Tunnel で公開する
+#   docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
+#   docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+# 事前に同じディレクトリの .env に CLOUDFLARE_TUNNEL_TOKEN を設定しておく (.env.example 参照)
+# Cloudflare 側の Public Hostname のサービスは http://react-frontend:80 を指定する
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:?CLOUDFLARE_TUNNEL_TOKEN を .env に設定してください}
+    depends_on:
+      - react-frontend
+    mem_limit: 128m

@@ -1,0 +1,12 @@
+# 開発マシン用: ローカルのソースからイメージをビルドして起動する
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+services:
+  react-frontend:
+    image: svg-converter-frontend:dev
+    build: ./app/react-frontend
+    pull_policy: build
+
+  python-backend:
+    image: svg-converter-backend:dev
+    build: ./app/python-backend
+    pull_policy: build

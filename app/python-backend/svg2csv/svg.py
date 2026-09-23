@@ -4,20 +4,28 @@ import pandas as pd
 import os, re
 
 
-def svg2cmd(file_name: str) -> list[list[str]]:
+NAMESPACES = {"svg": "http://www.w3.org/2000/svg"}
+
+
+class InvalidSvgError(ValueError):
+    """変換できないSVGが渡されたときの例外"""
+
+
+def svg2cmd(file_name) -> list[list[str]]:
     """
     SVGデータからすべての線分または折れ線のノード座標を取得して配列として返す。
 
     Parameters:
-        file_name (str): SVGファイルのパス。
+        file_name: SVGファイルのパス、またはファイルオブジェクト。
 
     Returns:
         List[List[str]]: 各pathのコマンドリスト。
     """
-    # SVGファイルのパース
-    tree = ET.parse(file_name)
-    root = tree.getroot()
-    namespaces = {"svg": "http://www.w3.org/2000/svg"}
+    return _root2cmd(ET.parse(file_name).getroot())
+
+
+def _root2cmd(root: ET.Element) -> list[list[str]]:
+    namespaces = NAMESPACES
 
     # <path>要素を取得
     paths = root.findall(".//svg:path", namespaces)
@@ -47,17 +55,23 @@ def svg2cmd(file_name: str) -> list[list[str]]:
     return commands
 
 
-def convert_svg_csv(file_name: str, power: float, velocity: int):
+def convert_svg_csv(file_name, power: float, velocity: int):
     """
     SVGデータからAMCプロット用の座標データを作成する関数
+    file_name: SVGファイルのパス、またはファイルオブジェクト
     """
-    # SVGファイルをパースして変換
-    tree = ET.parse(file_name)
-    root = tree.getroot()
-    namespaces = {"svg": "http://www.w3.org/2000/svg"}
+    # SVGファイルをパースして変換 (ストリームも扱えるようにパースは1回だけ)
+    try:
+        root = ET.parse(file_name).getroot()
+    except ET.ParseError as e:
+        raise InvalidSvgError("SVGファイルを解析できません") from e
+    namespaces = NAMESPACES
 
     # translate情報を取得
-    transform = root.find(".//svg:g[svg:path]", namespaces).attrib.get("transform", "")
+    group = root.find(".//svg:g[svg:path]", namespaces)
+    if group is None:
+        raise InvalidSvgError("path を含むレイヤー(g要素)が見つかりません")
+    transform = group.attrib.get("transform", "")
     if transform:
         translate = re.split("[(),]", transform)[1:3]
         translate = [float(item) if item else float(0) for item in translate]
@@ -65,16 +79,18 @@ def convert_svg_csv(file_name: str, power: float, velocity: int):
         translate = [0., 0.]
 
     # SVG全体のサイズを取得
-    svg_elem = root.find(".//svg:svg", namespaces)
-    width = float(root.attrib["width"])
-    height = float(root.attrib["height"])
+    try:
+        width = float(root.attrib["width"])
+        height = float(root.attrib["height"])
+    except (KeyError, ValueError) as e:
+        raise InvalidSvgError("SVGのwidth/height属性を数値として読めません") from e
 
     # power設定
     data = []
     data.append(["#power", power, "", ""])
 
     # 描画データ変換
-    paths = svg2cmd(file_name)
+    paths = _root2cmd(root)
     for path in paths:
         for command in path:
             x, y = [float(i) for i in command[1:].split(",")]

@@ -1,6 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Routes,
+  Route,
+} from "react-router-dom";
 import { Converter } from "./pages/Converter";
-import { Download } from "./pages/Download";
 
 function App() {
   return (
@@ -8,7 +12,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Converter />} />
-          <Route path="/download" element={<Download />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </div>
