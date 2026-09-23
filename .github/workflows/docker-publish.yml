@@ -1,20 +1,28 @@
 name: Build and publish Docker images
 
 on:
-  # イメージのビルド・公開は main へのマージ時のみ
+  # イメージのビルド・公開は main へのマージ時のみ。
+  # イメージの中身に影響するファイルが変わったときだけ走らせる
+  # (README などのドキュメント・テスト・compose・このワークフロー自体の変更では走らない)。
+  # それ以外で公開し直したいときは Actions 画面から workflow_dispatch で手動実行する。
   push:
     branches: [main]
     paths:
-      - "app/**"
-      - "docker-compose*.yml"
-      - ".github/workflows/docker-publish.yml"
-  # PR ではテスト・フロントエンドのビルド確認のみ実行する
+      - "app/python-backend/**"
+      - "app/react-frontend/**"
+      - "!**/*.md"
+      - "!**/.gitignore"
+      - "!app/python-backend/tests/**"
+      - "!app/python-backend/requirements-dev.txt"
+  # PR ではテスト・フロントエンドのビルド確認・本番構成のチェックのみ実行する (ドキュメントだけの変更では走らない)
   pull_request:
     branches: [main, "develop/**"]
     paths:
       - "app/**"
+      - "svg/**"
       - "docker-compose*.yml"
       - ".github/workflows/docker-publish.yml"
+      - "!**/*.md"
   workflow_dispatch:
 
 # 既定は読み取りのみ。イメージの push が必要なジョブだけ個別に packages: write を付与する
