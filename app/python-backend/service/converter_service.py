@@ -1,21 +1,22 @@
-import os
+import io
+from typing import IO
 
 from converter.converter_response import ConverterResponse
 from converter.plot_csv import plot_csv
-from converter.svg_converter import svg_converter
-from converter.svg_uploader import svg_upload
-from service.csv_service import delete_all_files_in_directory
+from converter.svg_converter import csv_file_name, svg_converter
 
 
 class ConvertService:
     @staticmethod
-    def convert(power: float, speed: int) -> ConverterResponse:
-        svg_path = svg_upload()
-        csv_local_path = svg_converter(svg_path, float(power), int(speed))
-        plot_base64_image = plot_csv(csv_local_path, "gradation")
-
-        delete_all_files_in_directory("./uploads")
+    def convert(
+        svg_stream: IO[bytes], svg_file_name: str, power: float, speed: int
+    ) -> ConverterResponse:
+        # 変換結果はすべてメモリ上で扱い、サーバーには何も保存しない
+        csv_text = svg_converter(svg_stream, power, speed)
+        plot_base64_image = plot_csv(io.StringIO(csv_text), "gradation")
 
         return ConverterResponse(
-            f"http://localhost:5002{csv_local_path[1:]}", plot_base64_image
+            csv_name=csv_file_name(svg_file_name, power, speed),
+            csv_text=csv_text,
+            plot_base64_image=plot_base64_image,
         )

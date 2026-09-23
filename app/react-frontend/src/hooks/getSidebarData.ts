@@ -13,9 +13,4 @@ export const sidebarData: SidebarData[] = [
     link: PagePath.CONVERTER,
     label: "Convert",
   },
-  {
-    name: PageName.DOWNLOAD,
-    link: PagePath.DOWNLOAD,
-    label: "Downloads",
-  },
 ];

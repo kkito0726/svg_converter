@@ -1,4 +1,5 @@
 import { handleDownloadCSV } from "../../hooks/download";
+import { useCsvObjectUrl } from "../../hooks/useCsvObjectUrl";
 import { ConverterResponse } from "../../types/ConverterResponse";
 import { Processing } from "../Processing";
 
@@ -10,6 +11,8 @@ export const ResFigure: React.FC<FigureProps> = ({
   isPost,
   converterResponse,
 }) => {
+  const csvUrl = useCsvObjectUrl(converterResponse?.csv_text);
+
   const handleCopyToClipboard = async (img_url: string) => {
     try {
       const blob = await fetch(img_url).then((r) => r.blob());
@@ -46,8 +49,12 @@ export const ResFigure: React.FC<FigureProps> = ({
                   className="text-slate-200 rounded-sm px-2 py-1 group-hover:opacity-100 transition-opacity hover:bg-gray-200 hover:text-gray-500"
                 ></button>
                 <button
-                  onClick={() => handleDownloadCSV(converterResponse.csv_url)}
-                  className="text-slate-200 bg-cyan-500 rounded-sm px-2 py-1 transition-opacity hover:bg-cyan-600"
+                  onClick={() =>
+                    csvUrl &&
+                    handleDownloadCSV(csvUrl, converterResponse.csv_name)
+                  }
+                  disabled={!csvUrl}
+                  className="text-slate-200 bg-cyan-500 rounded-sm px-2 py-1 transition-opacity hover:bg-cyan-600 disabled:opacity-50"
                 >
                   Download AMC Plot CSV File
                 </button>

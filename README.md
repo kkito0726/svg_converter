@@ -24,14 +24,47 @@ cd ~/Workspace
 git clone https://github.com/kkito0726/svg_converter.git
 ```
 
-docker コンテナの起動
+docker コンテナの起動 (GitHub Actions でビルド済みのイメージを ghcr.io から取得する)
 
 ```bash
 cd ~/Workspace/svg_converter
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 ```
 
-完了したら Docker Desktop の svg-converter-app の中の react-frontend の 4174:4173 と書いてあるリンクを押す (環境構築した後は常にここから起動)
+完了したら Docker Desktop の svg-converter-app の中の react-frontend の 4174:80 と書いてあるリンクを押す (環境構築した後は常にここから起動)
+
+#### 開発時 (ローカルのソースからビルドする)
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+#### 自宅サーバー (Raspberry Pi 5) で Cloudflare Tunnel を使って公開する
+
+1. Cloudflare Zero Trust > Networks > Tunnels でトンネルを作成し、トークンを控える
+2. トンネルの Public Hostname を追加し、Service に `http://react-frontend:80` を指定する
+3. サーバー上で `.env.example` を `.env` にコピーし、`CLOUDFLARE_TUNNEL_TOKEN` を設定する
+4. 起動
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
+docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+```
+
+- アプリに認証機能はないため、利用者を限定する場合は Cloudflare Access でアクセス制限をかける
+- 変換 API は nginx でレート制限 (1 IP あたり 20 回/分) をかけている
+- 変換結果はディスクに保存しないため、ボリュームやファイル削除の運用は不要
+
+### イメージの公開 (GitHub Actions)
+
+`main` への push (`app/` 配下の変更時) と `v*` タグの push で、`.github/workflows/docker-publish.yml` がテスト後に
+amd64 / arm64 のイメージをビルドして ghcr.io に公開する。
+
+- `ghcr.io/kkito0726/svg-converter-backend`
+- `ghcr.io/kkito0726/svg-converter-frontend`
+
+タグは `latest` (main)、`sha-<短縮SHA>`、`<バージョン>` (v タグ時)。特定のバージョンに固定する場合は `.env` に `IMAGE_TAG` を設定する。
 
 ## 使い方
 
@@ -51,7 +84,9 @@ docker compose up -d --build
 1. アプリ左上のボタンから作成したSVGファイルをアップロードする
 2. Power (W)とSpeed (μm/s)を入力してSubmitボタンを押す
 3. 処理が終わると描画位置のグラフが出て、右下からCSVファイルをダウンロードできる
-4. 過去に変換したファイルはDownloads画面からダウンロードできる。使わないファイルは定期的に削除する
+
+> サーバーは変換結果を一切保存しない（ステートレス）。ダウンロードURLはブラウザ内だけで有効な一時URLなので、
+> ページを再読み込みしたり次の変換を実行すると消える。必要なCSVはその場でダウンロードしておくこと。
 
 ---
 
@@ -77,5 +112,6 @@ $ sudo shutdown -h now
 ```bash
 cd ~/Workspace/svg_converter
 git pull
-docker compose up -d --build
+docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
+docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 ```

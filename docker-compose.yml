@@ -1,16 +1,26 @@
+# ghcr.io に公開済みのイメージで起動する (ビルド不要)
+#   docker compose pull && docker compose up -d
+# 特定のバージョンを使う場合: IMAGE_TAG=sha-xxxxxxx docker compose up -d
 services:
   react-frontend:
-    build: ./app/react-frontend
-    tty: true
+    image: ghcr.io/kkito0726/svg-converter-frontend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
     ports:
-      - "4174:4173"
+      - "4174:80"
+    depends_on:
+      - python-backend
+    mem_limit: 128m
 
+  # 外部には公開せず、react-frontend (nginx) の /api 経由でのみアクセスする
+  # 変換結果は保存しないためボリュームは不要 (ステートレス)
   python-backend:
-    build: ./app/python-backend
-    tty: true
-    ports:
-      - "5002:5001"
-    volumes:
-      - ./python-backend/static:/usr/src/server/static
+    image: ghcr.io/kkito0726/svg-converter-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    expose:
+      - "5001"
     environment:
-      - FLASK_ENV=docker
+      - MAX_UPLOAD_MB=20
+    mem_limit: 1g
+    read_only: true
+    tmpfs:
+      - /tmp

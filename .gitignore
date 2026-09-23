@@ -5,4 +5,4 @@ svg-converter-app/python-backend/svg2csv/test.ipynb
 svg-converter-app/python-backend/svg2csv/__pycache__
 .DS_Store
 .idea
-test.svg
+test.svg/.env
