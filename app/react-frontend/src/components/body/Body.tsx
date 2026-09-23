@@ -1,79 +1,73 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDataSubmission } from "../../hooks/useDataSubmission";
 import { ResFigure } from "../figure/ResFigure";
+import { Footer } from "../footer/Footer";
+import { IconAlert } from "../icons";
+import { FileDropzone } from "./FileDropzone";
 import { Form } from "./form/Form";
+
+// 1カラム表示 (lg 未満) のときは変換結果が画面外になるのでスクロールする
+const STACKED_LAYOUT_QUERY = "(max-width: 1023px)";
 
 export const Body: React.FC = () => {
   const {
     values,
     isPost,
-    converterResponse,
+    result,
     errorMessage,
     svgFile,
+    canSubmit,
     handleChange,
     handleInitialize,
-    handleSvg,
+    selectFile,
+    clearFile,
     handleSubmit,
   } = useDataSubmission();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewRef = useRef<HTMLElement>(null);
 
-  const handleFileButtonClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+  useEffect(() => {
+    if (result && window.matchMedia(STACKED_LAYOUT_QUERY).matches) {
+      previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  };
+  }, [result]);
 
   return (
-    <div className="flex h-screen-minus-topbar">
-      <div className="flex flex-col w-input bg-zinc-700 overflow-y-auto hide-scrollbar">
-        <div className="flex flex-col px-4 pb-1">
-          <span className="block font-medium text-gray-300 rounded-sm text-sm px-1">
-            .svgファイルを選択
-          </span>
-          <button
-            type="button"
-            className="mt-1 block w-full px-4 py-2 text-center text-gray-200 bg-cyan-600 rounded-md shadow-sm hover:bg-cyan-700 focus:outline-none"
-            onClick={handleFileButtonClick}
-          >
-            ファイルを選択
-          </button>
-          <input
-            ref={fileInputRef}
-            onChange={handleSvg}
-            type="file"
-            accept=".svg"
-            className="hidden"
+    <main className="mx-auto grid w-full max-w-[1600px] flex-1 gap-4 p-4 sm:gap-6 sm:p-6 lg:grid-cols-[minmax(320px,380px)_minmax(0,1fr)]">
+      <aside className="panel flex flex-col gap-6 self-start p-4 sm:p-5 lg:sticky lg:top-20">
+        <section className="space-y-3">
+          <h2 className="eyebrow">01 · Input</h2>
+          <FileDropzone file={svgFile} onSelect={selectFile} onClear={clearFile} />
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="eyebrow">02 · Parameters</h2>
+          <Form
+            values={values}
+            isPost={isPost}
+            canSubmit={canSubmit}
+            handleChange={handleChange}
+            handleInitialize={handleInitialize}
+            handleSubmit={handleSubmit}
           />
-          {svgFile.svgName ? (
-            <div className="flex flex-col pb-2">
-              <div className="flex justify-between">
-                <div>
-                  <span className="text-gray-300">{svgFile.svgName}</span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <span className="text-gray-300">
-              ファイルが読み込まれていません
-            </span>
-          )}
-        </div>
+        </section>
+
         {errorMessage ? (
-          <p className="mx-4 mb-2 px-3 py-2 text-sm text-red-200 bg-red-900 rounded-md">
+          <p
+            role="alert"
+            className="flex animate-rise items-start gap-2 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2.5 text-sm text-danger"
+          >
+            <IconAlert className="mt-0.5 h-4 w-4 shrink-0" />
             {errorMessage}
           </p>
         ) : null}
-        <Form
-          values={values}
-          handleChange={handleChange}
-          handleInitialize={handleInitialize}
-          handleSubmit={handleSubmit}
-        />
-      </div>
-      <div className="overflow-y-auto">
-        <ResFigure isPost={isPost} converterResponse={converterResponse} />
-      </div>
-    </div>
+
+        <div className="border-t border-line/60 pt-4">
+          <Footer />
+        </div>
+      </aside>
+
+      <ResFigure ref={previewRef} isPost={isPost} result={result} />
+    </main>
   );
 };
