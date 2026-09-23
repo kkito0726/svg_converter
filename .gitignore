@@ -6,3 +6,7 @@ svg-converter-app/python-backend/svg2csv/__pycache__
 .DS_Store
 .idea
 test.svg
+
+# docker-compose 用のシークレット (CLOUDFLARE_TUNNEL_TOKEN など)
+.env
+!.env.example

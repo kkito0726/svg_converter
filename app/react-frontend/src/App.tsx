@@ -1,18 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Converter } from "./pages/Converter";
-import { Download } from "./pages/Download";
 
+// 画面は1ページのみ。未知のパス (旧 /download など) は nginx が / へリダイレクトする
 function App() {
-  return (
-    <div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Converter />} />
-          <Route path="/download" element={<Download />} />
-        </Routes>
-      </Router>
-    </div>
-  );
+  return <Converter />;
 }
 
 export default App;

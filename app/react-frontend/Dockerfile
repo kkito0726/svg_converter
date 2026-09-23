@@ -1,10 +1,18 @@
-FROM node:current-alpine3.19
+# 成果物は静的ファイルなので、ビルドはホストのアーキテクチャで行う (arm64 の QEMU エミュレーションを避ける)
+FROM --platform=$BUILDPLATFORM node:22-alpine AS build
 
-WORKDIR /user/src/client
+WORKDIR /usr/src/client
+
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
+RUN npm run build
 
-RUN npm i \
- && npm run build
+FROM nginx:1.27-alpine
 
-CMD [ "npm", "run", "preview" ]
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY security-headers.inc /etc/nginx/conf.d/security-headers.inc
+COPY --from=build /usr/src/client/dist /usr/share/nginx/html
+
+EXPOSE 80

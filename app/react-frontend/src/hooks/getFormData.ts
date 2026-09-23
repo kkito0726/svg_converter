@@ -1,31 +1,37 @@
-import { FormValues } from "../types/FormValues";
+import {
+  FormValues,
+  POWER_RANGE,
+  SPEED_RANGE,
+  isPowerValid,
+  isSpeedValid,
+} from "../types/FormValues";
 
-type FormData = {
-  name: string;
+export type FormField = {
+  name: keyof FormValues;
   label: string;
+  unit: string;
   value: number;
   min: number;
   max: number;
   step: number;
+  isValid: boolean;
 };
 
-export const getFormData = (values: FormValues): FormData[] => {
-  return [
-    {
-      name: "power",
-      label: "Power (W)",
-      value: values.power,
-      min: 0.01,
-      max: 1.22,
-      step: 0.01,
-    },
-    {
-      name: "end",
-      label: "Speed (μm/s)",
-      value: values.speed,
-      min: 1,
-      max: 10000,
-      step: 1,
-    },
-  ];
-};
+export const getFormData = (values: FormValues): FormField[] => [
+  {
+    name: "power",
+    label: "レーザーパワー",
+    unit: "W",
+    value: values.power,
+    ...POWER_RANGE,
+    isValid: isPowerValid(values.power),
+  },
+  {
+    name: "speed",
+    label: "ステージ速度",
+    unit: "μm/s",
+    value: values.speed,
+    ...SPEED_RANGE,
+    isValid: isSpeedValid(values.speed),
+  },
+];

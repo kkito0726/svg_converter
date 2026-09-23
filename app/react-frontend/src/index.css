@@ -2,39 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  scrollbar-color: #353535d5 #0e0e10; /* スクロールバーのツマミの色と背景色 */
-}
-#root {
-  background-color: #0e0e10;
-  height: 100%;
-}
-/* スクロールバーを非表示にする */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+@layer base {
+  :root {
+    --c-canvas: 10 12 15;
+    --c-panel: 18 21 26;
+    --c-raised: 26 30 37;
+    --c-line: 42 48 58;
+    --c-ink: 228 232 238;
+    --c-muted: 138 147 162;
+    --c-accent: 34 211 238;
+    --c-laser: 255 92 56;
+    --c-danger: 248 113 113;
+    color-scheme: dark;
+  }
+
+  html {
+    scrollbar-color: rgb(var(--c-line)) rgb(var(--c-canvas));
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    /* 加工ステージの座標グリッドを思わせる背景 */
+    background-image:
+      radial-gradient(ellipse 80% 60% at 70% 0%, rgb(var(--c-accent) / 0.07), transparent 70%),
+      linear-gradient(rgb(255 255 255 / 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px);
+    background-size: 100% 100%, 32px 32px, 32px 32px;
+    background-attachment: fixed;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent/70 ring-offset-2 ring-offset-canvas;
+  }
 }
 
-.hide-scrollbar {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-line/70 bg-panel/80 shadow-[0_1px_0_0_rgb(255_255_255/0.04)_inset,0_20px_40px_-24px_rgb(0_0_0/0.8)] backdrop-blur;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition
+      disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-canvas shadow-[0_0_0_1px_rgb(var(--c-accent)/0.4),0_8px_24px_-8px_rgb(var(--c-accent)/0.6)]
+      hover:brightness-110 active:brightness-95;
+  }
+
+  .btn-ghost {
+    @apply btn border border-line bg-raised/60 text-ink hover:border-muted/60 hover:bg-raised;
+  }
+
+  /* プレビュー枠の四隅のトンボ */
+  .crop-marks {
+    @apply pointer-events-none absolute inset-3;
+    background:
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top left / 14px 1px,
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top left / 1px 14px,
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top right / 14px 1px,
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top right / 1px 14px,
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom left / 14px 1px,
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom left / 1px 14px,
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom right / 14px 1px,
+      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom right / 1px 14px;
+    background-repeat: no-repeat;
+  }
 }
 
-/* 水平スクロールバー */
-::-webkit-scrollbar {
-  background-color: #e02929; /* バックグラウンド色 */
-  width: 12px; /* 幅 */
-}
-
-/* スクロールバーのトラック */
-::-webkit-scrollbar-track {
-  background-color: #f5f5f5; /* バックグラウンド色 */
-}
-
-/* スクロールバーのハンドル */
-::-webkit-scrollbar-thumb {
-  background-color: #ccc; /* ハンドルの色 */
-  border-radius: 6px; /* 角丸 */
-  border: 3px solid #f5f5f5; /* ハンドルの境界線 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
