@@ -1,0 +1,18 @@
+# 固定したイメージのバージョンに更新があれば PR で知らせる (自動ではマージされない)。
+# 取り込むかどうか・いつリリースするかは PR を見て判断する。
+version: 2
+updates:
+  - package-ecosystem: docker
+    directories:
+      - /app/python-backend
+      - /app/react-frontend
+    schedule:
+      interval: monthly
+    groups:
+      base-images:
+        patterns: ["*"]
+
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: monthly

@@ -1,4 +1,6 @@
-FROM python:3.12-slim
+# ベースイメージはバージョンと digest で固定する (タグの付け替えで意図しない/悪意のある版が入らないように)。
+# 更新するときは新しいタグの digest を確認してから書き換える: docker buildx imagetools inspect python:<tag>
+FROM python:3.12.14-slim-trixie@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
