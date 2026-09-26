@@ -20,6 +20,8 @@ from stream_utils import stream_size
 REDACTED = "[REDACTED]"
 TRUNCATED_MARK = "…[truncated]"
 REQUEST_ID_PATTERN = re.compile(r"[A-Za-z0-9-]{1,64}")
+# フロントエンドがブラウザごとに作る匿名 ID (UUID v4)
+CLIENT_ID_PATTERN = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")
 # 値をログに出してよいヘッダ (小文字)。それ以外は名前だけ出して値は伏せる
 HEADER_ALLOWLIST = frozenset(
     {
@@ -55,6 +57,12 @@ def resolve_request_id(header_value: str | None) -> str:
     if header_value and REQUEST_ID_PATTERN.fullmatch(header_value):
         return header_value
     return uuid.uuid4().hex
+
+
+def resolve_client_id(header_value: str | None) -> str | None:
+    """利用者数の把握用。UUID v4 以外 (メールアドレス等を入れられた場合も含む) は記録しない"""
+    normalized = (header_value or "").lower()
+    return normalized if CLIENT_ID_PATTERN.fullmatch(normalized) else None
 
 
 def resolve_client_ip(real_ip_header: str | None, remote_addr: str | None) -> str | None:
@@ -162,6 +170,7 @@ def _completed_fields(response: Response) -> dict:
         "duration_ms": round((time.perf_counter() - g.request_started) * 1000),
         "content_length": request.content_length,
         "client_ip": resolve_client_ip(request.headers.get("X-Real-IP"), request.remote_addr),
+        "client_id": resolve_client_id(request.headers.get("X-Client-ID")),
         "user_agent": truncate(request.headers.get("User-Agent", ""), USER_AGENT_LIMIT),
         **({"reason": reason} if reason else {}),
         **({"request": _request_details(status, debug)} if status >= 400 or debug else {}),

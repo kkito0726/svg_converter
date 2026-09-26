@@ -254,3 +254,16 @@ def test_internal_error_response_has_request_id(client, log_output, sample_svg, 
 
     assert res.status_code == 500
     assert res.headers["X-Request-ID"] == "err-1"
+
+
+def test_client_id_is_logged(client, log_output, sample_svg):
+    client_id = "3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b"
+    post_svg(client, sample_svg, headers={"X-Client-ID": client_id})
+    assert only(log_output, "request.completed")["client_id"] == client_id
+
+
+def test_invalid_client_id_is_logged_as_none(client, log_output, sample_svg):
+    post_svg(client, sample_svg, headers={"X-Client-ID": "user@example.com"})
+    completed = only(log_output, "request.completed")
+    assert completed["client_id"] is None
+    assert "user@example.com" not in str(log_output)

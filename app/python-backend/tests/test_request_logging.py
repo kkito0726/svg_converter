@@ -9,6 +9,7 @@ from request_logging import (
     level_for_status,
     read_svg_head,
     redact_headers,
+    resolve_client_id,
     resolve_client_ip,
     resolve_request_id,
     summarize_files,
@@ -137,3 +138,28 @@ def test_client_ip_falls_back_to_remote_addr(real_ip):
 @pytest.mark.parametrize("status,level", [(200, "info"), (302, "info"), (400, "warning"), (413, "warning"), (500, "error")])
 def test_level_for_status(status, level):
     assert level_for_status(status) == level
+
+
+def test_client_id_accepts_uuid_v4():
+    value = "3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b"
+    assert resolve_client_id(value) == value
+
+
+def test_client_id_is_normalized_to_lowercase():
+    assert resolve_client_id("3F2B8C1E-9A4D-4E7F-8B2A-1C3D5E7F9A0B") == "3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b"
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        None,
+        "",
+        "not-a-uuid",
+        "{3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b}",
+        "3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b\n",
+        "3f2b8c1e-9a4d-1e7f-8b2a-1c3d5e7f9a0b",
+        "user@example.com",
+    ],
+)
+def test_client_id_rejects_other_values(value):
+    assert resolve_client_id(value) is None

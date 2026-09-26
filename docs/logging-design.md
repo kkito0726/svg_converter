@@ -4,13 +4,14 @@
 
 ## 1. 目的と方針
 
-ログで答えたい問いは次の 3 つ。
+ログで答えたい問いは次の 4 つ。
 
 | 目的 | 知りたいこと |
 |---|---|
 | 障害調査 | どのリクエストが、どの入力で、なぜ失敗したか |
 | 運用監視 | リクエスト数・エラー率・処理時間 (特に Raspberry Pi 上の変換・描画時間) |
 | 不正利用の調査 | どの IP / クライアントから、どれくらいの頻度でアクセスされたか |
+| 利用状況の把握 | 1 人が使っているのか、複数人が使っているのか |
 
 基本方針:
 
@@ -54,7 +55,7 @@
 
 | event | level | 追加フィールド | 出す場所 |
 |---|---|---|---|
-| `request.completed` | 2xx/3xx: info, 4xx: warning, 5xx: error | `method`, `path`, `status`, `duration_ms`, `content_length`, `client_ip`, `user_agent`, (4xx/5xx 時) `reason`, `request` | `after_request`。`/healthz` は除外 |
+| `request.completed` | 2xx/3xx: info, 4xx: warning, 5xx: error | `method`, `path`, `status`, `duration_ms`, `content_length`, `client_ip`, `client_id`, `user_agent`, (4xx/5xx 時) `reason`, `request` | `after_request`。`/healthz` は除外 |
 | `convert.completed` | info | `svg_bytes`, `power`, `speed`, `svg2csv_ms`, `plot_ms`, `csv_bytes` | `ConvertService.convert` |
 | `convert.failed` | error | `exception` (スタックトレースの文字列) | `/svg2csv` の `except Exception` (現在の `logging.exception` を置き換え) |
 
@@ -84,7 +85,7 @@
 
 ```json
 {"timestamp":"2026-09-26T01:23:45.678Z","level":"info","event":"convert.completed","logger":"service.converter_service","request_id":"9f1c2a...","svg_bytes":48213,"power":0.5,"speed":1000,"svg2csv_ms":120,"plot_ms":640,"csv_bytes":20411}
-{"timestamp":"2026-09-26T01:23:45.690Z","level":"info","event":"request.completed","logger":"request_logging","request_id":"9f1c2a...","client_ip":"203.0.113.5","user_agent":"Mozilla/5.0 (Macintosh; ...)","method":"POST","path":"/svg2csv","status":200,"duration_ms":781,"content_length":48900}
+{"timestamp":"2026-09-26T01:23:45.690Z","level":"info","event":"request.completed","logger":"request_logging","request_id":"9f1c2a...","client_ip":"203.0.113.5","client_id":"3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b","user_agent":"Mozilla/5.0 (Macintosh; ...)","method":"POST","path":"/svg2csv","status":200,"duration_ms":781,"content_length":48900}
 ```
 
 入力エラー時:
@@ -106,7 +107,7 @@
 
 nginx 側で `proxy_set_header X-Request-ID $request_id;` を設定し、nginx のログとも突き合わせられるようにする。
 
-## 5. クライアント情報 (`client_ip` / `user_agent`)
+## 5. クライアント情報 (`client_ip` / `client_id` / `user_agent`)
 
 全リクエストの `request.completed` に最上位フィールドとして付ける。
 
@@ -131,13 +132,24 @@ flowchart LR
 
 `User-Agent` ヘッダを 256 文字で切り詰めて出す。ブラウザからのアクセスか、スクリプト (`curl`、`python-requests` 等) からのアクセスかの判別に使う。
 
-### 5.3 取り扱い
+### 5.3 `client_id` (ブラウザごとの匿名 ID)
 
-Cloudflare Access で利用者を認証しているため、アクセス時刻と IP から個人を特定できる。**IP / User-Agent は個人情報に準じて扱う。**
+「1 人が使っているのか、複数人が使っているのか」を知るための ID。本番は Cloudflare Tunnel のみで公開しており (Cloudflare Access によるログインは無い)、利用者を特定する情報は届かない。IP は学内 Wi-Fi などで大勢が同じ値を共有し、同じ人でも場所によって変わるため、人数の把握には使えない。
 
-- 利用目的は「不正利用・障害の調査」に限定する
-- 利用者にはログ取得について周知する (画面の注記、または研究室内での周知)
-- `Cf-Access-Authenticated-User-Email` (Access でログインした人のメールアドレス) は記録しない。IP と並べると個人を完全に特定できるため (6 章の許可リスト外なので自動で伏せられる)
+- フロントエンド (`src/utils/clientId.ts`) が初回に UUID v4 を作って localStorage に保存し、API 呼び出しの `X-Client-ID` ヘッダで送る
+  - `crypto.randomUUID` は HTTPS / localhost でしか使えないため、研究室 PC (`http://<IP>:4174`) でも動く `crypto.getRandomValues` で作る
+  - localStorage が使えない場合 (プライベートモード等) は、ページを開いている間だけの ID になる
+- バックエンドは UUID v4 の形式 (小文字に正規化して `fullmatch`) のものだけを記録し、それ以外 (メールアドレス等を入れられた場合も含む) は `null` にする
+- 集計例: `jq -r 'select(.event=="request.completed") | .client_id' | sort -u | wc -l`
+- 精度: 同じ人が PC とスマホで使う、ブラウザのデータを消すと別の ID になる。人数の目安としては十分
+
+### 5.4 取り扱い
+
+利用者はログインしておらず、ログの項目 (IP、User-Agent、ランダムな `client_id`) は単体では個人を特定しない。ただし組み合わせると識別の手がかりになり得るため、次のように扱う。
+
+- 利用目的は「不正利用・障害の調査と、利用状況の把握」に限定する
+- 利用目的を README か画面のフッターに一行書いて公表する (例: 「不正利用・障害の調査と利用状況の把握のため、アクセス元の IP アドレス・ブラウザ情報・匿名の利用者 ID を記録しています」)
+- 将来 Cloudflare Access などでログインを導入する場合は、IP と利用者が結び付くので扱いを見直す。`Cf-Access-*` ヘッダは 6 章の許可リスト外なので、導入後も自動で伏せられる
 
 ## 6. リクエスト内容の記録
 
@@ -169,7 +181,7 @@ Content-Type, Content-Length, User-Agent, Accept, Accept-Language,
 Origin, Referer, X-Request-ID, CF-Ray, CF-IPCountry
 ```
 
-許可リスト外なので伏せられる主なヘッダ: `Cookie`, `Authorization`, `Cf-Access-Jwt-Assertion`, `Cf-Access-Authenticated-User-Email`, `CF-Connecting-IP`, `X-Forwarded-For`, `X-Real-IP` (IP は `client_ip` に一本化する)。
+許可リスト外なので伏せられる主なヘッダ: `Cookie`, `Authorization`, `Cf-Access-Jwt-Assertion`, `Cf-Access-Authenticated-User-Email`, `CF-Connecting-IP`, `X-Forwarded-For`, `X-Real-IP`, `X-Client-ID` (IP と匿名 ID はそれぞれ `client_ip` / `client_id` に一本化する)。
 
 値は JSON レンダラでエスケープされるため、改行を含む入力でログ行を偽装されることはない。
 
@@ -231,6 +243,7 @@ Origin, Referer, X-Request-ID, CF-Ray, CF-IPCountry
 | `app/python-backend/service/converter_service.py` | ステップごとの処理時間の計測と `convert.completed` |
 | `app/python-backend/gunicorn.conf.py` (新規) | `logconfig_dict` と既存の CMD オプション |
 | `app/python-backend/Dockerfile` | CMD を `-c gunicorn.conf.py` に変更 |
+| `app/react-frontend/src/utils/clientId.ts` (新規) / `src/hooks/useDataSubmission.ts` | 匿名 ID の生成と `X-Client-ID` ヘッダの送信 |
 | `app/react-frontend/nginx.conf` | `/api/` に `X-Real-IP` と `X-Request-ID` の `proxy_set_header` を追加 |
 | `docker-compose.yml` / `docker-compose.deploy.yml` / `docker-compose.dev.yml` | `LOG_LEVEL` / `LOG_FORMAT` とログローテーション |
 
@@ -245,6 +258,7 @@ TDD で進める。`structlog.testing.capture_logs()` でログを検証する�
 - フォーム値が 1KB で切り詰められる
 - ファイル情報に `filename` そのものが含まれない
 - `user_agent` が 256 文字で切り詰められる
+- `client_id`: UUID v4 は小文字にして採用、それ以外 (UUID の別形式・末尾改行・メールアドレス等) は `None`
 - `LOG_LEVEL` / `LOG_FORMAT` の不正な値で `ValueError`
 
 結合テスト (`tests/test_app_logging.py`、Flask の test client):
@@ -255,6 +269,7 @@ TDD で進める。`structlog.testing.capture_logs()` でログを検証する�
 - 500 (変換処理を例外にモック): `convert.failed` (error、`exc_info` 付き) が出て、利用者へのレスポンスにスタックトレースが含まれない
 - `X-Request-ID` がレスポンスヘッダとログで一致する
 - `client_ip` は `X-Real-IP` から取られ、`CF-Connecting-IP` / `X-Forwarded-For` は無視される
+- `client_id` が `X-Client-ID` から取られ、不正な値はログに残らない
 - `/healthz` では `request.completed` が出ない
 - INFO では SVG の中身がログに出ない
 
