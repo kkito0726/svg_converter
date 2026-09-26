@@ -10,3 +10,6 @@ services:
     image: svg-converter-backend:dev
     build: ./app/python-backend
     pull_policy: build
+    # 開発時は人が読みやすいカラー表示にする
+    environment:
+      - LOG_FORMAT=console

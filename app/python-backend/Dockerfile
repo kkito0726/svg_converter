@@ -17,5 +17,5 @@ USER appuser
 
 EXPOSE 5001
 
-# pyplot はスレッドセーフではないのでスレッドではなくプロセスで並列化する
-CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "2", "--timeout", "120", "--max-requests", "200", "--max-requests-jitter", "20", "app:app"]
+# worker 数やログ設定は gunicorn.conf.py を参照
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "app:app"]
