@@ -24,6 +24,14 @@ services:
       - "5001"
     environment:
       - MAX_UPLOAD_MB=20
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+    # ログはコンテナの作り直しで消える。容量の上限だけ設ける (docs/logging-design.md 11 章)
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     mem_limit: 1g
     read_only: true
     tmpfs:
