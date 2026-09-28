@@ -5,33 +5,49 @@ import logging
 import pytest
 import structlog
 
-from logging_config import LogSettings, build_logging_dict, configure_logging, load_settings
+from logging_config import LogFormat, LogLevel, LogSettings, build_logging_dict, configure_logging, load_settings
 
 
 def test_load_settings_defaults():
-    assert load_settings({}) == LogSettings(level="INFO", format="json")
+    assert load_settings({}) == LogSettings(level=LogLevel.INFO, format=LogFormat.JSON)
 
 
-def test_load_settings_normalizes_case():
-    assert load_settings({"LOG_LEVEL": "debug", "LOG_FORMAT": "CONSOLE"}) == LogSettings(
-        level="DEBUG", format="console"
-    )
+def test_load_settings_normalizes_case_to_enums():
+    settings = load_settings({"LOG_LEVEL": "debug", "LOG_FORMAT": "CONSOLE"})
+    assert settings == LogSettings(level=LogLevel.DEBUG, format=LogFormat.CONSOLE)
+    assert isinstance(settings.level, LogLevel)
+    assert isinstance(settings.format, LogFormat)
 
 
-@pytest.mark.parametrize("env", [{"LOG_LEVEL": "verbose"}, {"LOG_FORMAT": "xml"}])
-def test_load_settings_rejects_invalid_values(env):
-    with pytest.raises(ValueError):
+@pytest.mark.parametrize(
+    "env,allowed",
+    [({"LOG_LEVEL": "verbose"}, "DEBUG, INFO, WARNING, ERROR"), ({"LOG_FORMAT": "xml"}, "json, console")],
+)
+def test_load_settings_rejects_invalid_values(env, allowed):
+    with pytest.raises(ValueError, match=allowed):
         load_settings(env)
 
 
+@pytest.mark.parametrize(
+    "level,numeric",
+    [(LogLevel.DEBUG, logging.DEBUG), (LogLevel.INFO, logging.INFO), (LogLevel.WARNING, logging.WARNING), (LogLevel.ERROR, logging.ERROR)],
+)
+def test_log_level_numeric_matches_stdlib(level, numeric):
+    assert level.numeric == numeric
+
+
+def test_logging_dict_uses_plain_level_name():
+    assert build_logging_dict(LogSettings(level=LogLevel.DEBUG, format=LogFormat.JSON))["root"]["level"] == "DEBUG"
+
+
 def test_noisy_libraries_are_limited_to_warning():
-    loggers = build_logging_dict(LogSettings(level="DEBUG", format="json"))["loggers"]
+    loggers = build_logging_dict(LogSettings(level=LogLevel.DEBUG, format=LogFormat.JSON))["loggers"]
     assert loggers["matplotlib"]["level"] == "WARNING"
     assert loggers["PIL"]["level"] == "WARNING"
 
 
 def test_gunicorn_error_logs_are_routed_to_root_handler():
-    loggers = build_logging_dict(LogSettings(level="INFO", format="json"))["loggers"]
+    loggers = build_logging_dict(LogSettings(level=LogLevel.INFO, format=LogFormat.JSON))["loggers"]
     assert loggers["gunicorn.error"]["handlers"] == []
     assert loggers["gunicorn.error"]["propagate"] is True
 

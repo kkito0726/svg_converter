@@ -4,6 +4,7 @@ import re
 import pytest
 from werkzeug.datastructures import FileStorage, MultiDict
 
+from logging_config import LogLevel
 from request_logging import (
     REDACTED,
     level_for_status,
@@ -135,7 +136,10 @@ def test_client_ip_falls_back_to_remote_addr(real_ip):
     assert resolve_client_ip(real_ip, "172.18.0.3") == "172.18.0.3"
 
 
-@pytest.mark.parametrize("status,level", [(200, "info"), (302, "info"), (400, "warning"), (413, "warning"), (500, "error")])
+@pytest.mark.parametrize(
+    "status,level",
+    [(200, LogLevel.INFO), (302, LogLevel.INFO), (400, LogLevel.WARNING), (413, LogLevel.WARNING), (500, LogLevel.ERROR)],
+)
 def test_level_for_status(status, level):
     assert level_for_status(status) == level
 

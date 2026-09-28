@@ -60,6 +60,7 @@
 | `convert.failed` | error | `exception` (スタックトレースの文字列) | `/svg2csv` の `except Exception` (現在の `logging.exception` を置き換え) |
 
 - 4xx はクライアントの入力ミスなので `warning` 止まりにし、`error` は「対応が必要なもの」に限る
+- event 名は `log_event.py` の `LogEvent` (`StrEnum`) で定義する。イベントを追加・変更するときは、この表と `tests/test_log_event.py` も更新する
 - エラー件数の集計は `event == "convert.failed"` で行う (`request.completed` の 5xx と二重に数えない)
 
 ### 3.3 `reason` コード
@@ -196,7 +197,7 @@ Origin, Referer, X-Request-ID, CF-Ray, CF-IPCountry
 | `LOG_LEVEL` | `INFO` | `DEBUG` / `INFO` / `WARNING` / `ERROR` |
 | `LOG_FORMAT` | `json` | `json` または `console` (開発用のカラー表示) |
 
-不正な値の場合は起動時に `ValueError` で落とす (設定ミスに気づけるように)。
+値は `logging_config.py` の `LogLevel` / `LogFormat` (`StrEnum`) で定義し、読み込み時に Enum に変換する。不正な値の場合は、指定できる値の一覧を含む `ValueError` で起動時に落とす (設定ミスに気づけるように)。`request.completed` のレベル (`level_for_status`) も `LogLevel` で返す。
 
 ### 7.2 structlog と標準 logging の統合
 
@@ -238,6 +239,7 @@ Origin, Referer, X-Request-ID, CF-Ray, CF-IPCountry
 | `app/python-backend/requirements.txt` | `structlog==26.1.0` を追加 |
 | `app/python-backend/logging_config.py` (新規) | `configure_logging()`、環境変数の検証、`build_logging_dict()` (gunicorn と共用) |
 | `app/python-backend/error_reason.py` (新規) | 理由コードの `ErrorReason` (`StrEnum`) |
+| `app/python-backend/log_event.py` (新規) | event 名の `LogEvent` (`StrEnum`) |
 | `app/python-backend/request_logging.py` (新規) | request_id の検証、ヘッダの伏せ字処理、フォーム・ファイル情報の要約 (純粋関数) と `before_request` / `after_request` の登録 |
 | `app/python-backend/app.py` | `configure_logging()` とフックの登録、`RequestError` への `reason` 追加、`logging.exception` の置き換え |
 | `app/python-backend/service/converter_service.py` | ステップごとの処理時間の計測と `convert.completed` |

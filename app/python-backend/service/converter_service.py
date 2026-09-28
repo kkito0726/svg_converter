@@ -7,6 +7,7 @@ import structlog
 from converter.converter_response import ConverterResponse
 from converter.plot_csv import plot_csv
 from converter.svg_converter import csv_file_name, svg_converter
+from log_event import LogEvent
 from stream_utils import stream_size
 
 logger = structlog.get_logger(__name__)
@@ -30,7 +31,7 @@ class ConvertService:
         plotted = time.perf_counter()
 
         logger.info(
-            "convert.completed",
+            LogEvent.CONVERT_COMPLETED,
             svg_bytes=svg_bytes,
             power=power,
             speed=speed,

@@ -15,6 +15,8 @@ from werkzeug.datastructures import FileStorage, MultiDict
 from werkzeug.exceptions import HTTPException
 
 from error_reason import ErrorReason
+from log_event import LogEvent
+from logging_config import LogLevel
 from stream_utils import stream_size
 
 REDACTED = "[REDACTED]"
@@ -121,12 +123,12 @@ def read_svg_head(files: MultiDict, limit: int = SVG_HEAD_LIMIT) -> str | None:
     return head.decode("utf-8", errors="replace")
 
 
-def level_for_status(status: int) -> str:
+def level_for_status(status: int) -> LogLevel:
     if status >= 500:
-        return "error"
+        return LogLevel.ERROR
     if status >= 400:
-        return "warning"
-    return "info"
+        return LogLevel.WARNING
+    return LogLevel.INFO
 
 
 def set_log_reason(reason: ErrorReason) -> None:
@@ -161,7 +163,7 @@ def _request_details(status: int, include_svg_head: bool) -> dict:
 
 def _completed_fields(response: Response) -> dict:
     status = response.status_code
-    debug = stdlib_logger.isEnabledFor(logging.DEBUG)
+    debug = stdlib_logger.isEnabledFor(LogLevel.DEBUG.numeric)
     reason = g.get("log_reason")
     return {
         "method": request.method,
@@ -193,9 +195,9 @@ def register_request_logging(app: Flask, exclude_paths: Iterable[str] = ()) -> N
             fields = _completed_fields(response)
         except Exception:
             # ログの組み立てに失敗してもレスポンスは返す
-            logger.exception("request.log_failed")
+            logger.exception(LogEvent.REQUEST_LOG_FAILED)
             return response
-        getattr(logger, level_for_status(response.status_code))("request.completed", **fields)
+        logger.log(level_for_status(response.status_code).numeric, LogEvent.REQUEST_COMPLETED, **fields)
         return response
 
     @app.teardown_request

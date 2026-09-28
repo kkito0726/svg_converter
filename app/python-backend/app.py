@@ -8,6 +8,7 @@ from svg2csv.svg import InvalidSvgError
 from werkzeug.exceptions import HTTPException
 
 from error_reason import ErrorReason
+from log_event import LogEvent
 from logging_config import configure_logging
 from request_logging import register_request_logging, set_log_reason
 from service.converter_service import ConvertService
@@ -78,7 +79,7 @@ def upload_file():
         raise
     except Exception:
         set_log_reason(ErrorReason.INTERNAL_ERROR)
-        logger.exception("convert.failed")
+        logger.exception(LogEvent.CONVERT_FAILED)
         return jsonify({"error": "変換中にエラーが発生しました"}), 500
 
     return jsonify(asdict(res)), 200

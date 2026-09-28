@@ -4,11 +4,30 @@ import logging.config
 import os
 from collections.abc import Mapping
 from dataclasses import dataclass
+from enum import StrEnum
 
 import structlog
 
-LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
-LOG_FORMATS = ("json", "console")
+
+class LogLevel(StrEnum):
+    """LOG_LEVEL で指定できるレベル。値は標準 logging のレベル名"""
+
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+
+    @property
+    def numeric(self) -> int:
+        return logging.getLevelNamesMapping()[self.value]
+
+
+class LogFormat(StrEnum):
+    JSON = "json"
+    # 開発用のカラー表示
+    CONSOLE = "console"
+
+
 # DEBUG にすると大量に出るライブラリ
 NOISY_LOGGERS = ("matplotlib", "PIL")
 
@@ -23,22 +42,27 @@ SHARED_PROCESSORS = [
 
 @dataclass(frozen=True)
 class LogSettings:
-    level: str
-    format: str
+    level: LogLevel
+    format: LogFormat
+
+
+def _parse_enum[E: StrEnum](enum_type: type[E], env_name: str, value: str) -> E:
+    try:
+        return enum_type(value)
+    except ValueError as e:
+        allowed = ", ".join(member.value for member in enum_type)
+        raise ValueError(f"{env_name} は {allowed} のいずれかを指定してください: {value}") from e
 
 
 def load_settings(env: Mapping[str, str]) -> LogSettings:
-    level = env.get("LOG_LEVEL", "INFO").upper()
-    log_format = env.get("LOG_FORMAT", "json").lower()
-    if level not in LOG_LEVELS:
-        raise ValueError(f"LOG_LEVEL は {', '.join(LOG_LEVELS)} のいずれかを指定してください: {level}")
-    if log_format not in LOG_FORMATS:
-        raise ValueError(f"LOG_FORMAT は {', '.join(LOG_FORMATS)} のいずれかを指定してください: {log_format}")
-    return LogSettings(level=level, format=log_format)
+    return LogSettings(
+        level=_parse_enum(LogLevel, "LOG_LEVEL", env.get("LOG_LEVEL", LogLevel.INFO).upper()),
+        format=_parse_enum(LogFormat, "LOG_FORMAT", env.get("LOG_FORMAT", LogFormat.JSON).lower()),
+    )
 
 
-def _render_processors(log_format: str) -> list:
-    if log_format == "console":
+def _render_processors(log_format: LogFormat) -> list:
+    if log_format == LogFormat.CONSOLE:
         return [structlog.dev.ConsoleRenderer()]
     return [structlog.processors.format_exc_info, structlog.processors.JSONRenderer(ensure_ascii=False)]
 
@@ -65,14 +89,14 @@ def build_logging_dict(settings: LogSettings) -> dict:
                 "formatter": "structlog",
             },
         },
-        "root": {"level": settings.level, "handlers": ["stdout"]},
+        "root": {"level": settings.level.value, "handlers": ["stdout"]},
         "loggers": {
-            **{name: {"level": "WARNING"} for name in NOISY_LOGGERS},
+            **{name: {"level": LogLevel.WARNING.value} for name in NOISY_LOGGERS},
             # gunicorn 自身のログも root のハンドラ (同じフォーマット) に流す
             "gunicorn.error": {"handlers": [], "propagate": True},
             # アクセスログは request.completed で出す。logconfig_dict を渡すと gunicorn は
             # accesslog=None でも INFO で出してくるので、レベルで止める
-            "gunicorn.access": {"level": "WARNING", "handlers": [], "propagate": True},
+            "gunicorn.access": {"level": LogLevel.WARNING.value, "handlers": [], "propagate": True},
         },
     }
 
