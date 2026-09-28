@@ -11,6 +11,20 @@ updates:
     groups:
       base-images:
         patterns: ["*"]
+    # 同じ系統の中のパッチ更新 (セキュリティ修正など) だけを PR にする。
+    # 系統を上げるときは、ライブラリの対応状況などを確認してから手で Dockerfile と CI を書き換える。
+    ignore:
+      # 3.12.x の範囲だけ。3.13 以降は requirements.txt の numpy / pandas / scipy などが
+      # 対応版 (wheel あり) になっていないと slim イメージではビルドできない
+      - dependency-name: python
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      # 安定版 (stable) の 1.30.x の範囲だけ。マイナー番号が奇数の系統 (1.31 など) は mainline。
+      # 次の安定版 (1.32) が出たら手で上げる
+      - dependency-name: nginx
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      # LTS の 24 系の範囲だけ。次の LTS に上げるときは手で上げる
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: docker-compose
     directory: /
