@@ -92,7 +92,7 @@
 入力エラー時:
 
 ```json
-{"timestamp":"...","level":"warning","event":"request.completed","logger":"request_logging","request_id":"9f1c...","client_ip":"203.0.113.5","user_agent":"Mozilla/5.0 ...","method":"POST","path":"/svg2csv","status":400,"reason":"out_of_range","duration_ms":3,
+{"timestamp":"...","level":"warning","event":"request.completed","logger":"request_logging","request_id":"9f1c...","client_ip":"203.0.113.5","client_id":"3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b","user_agent":"Mozilla/5.0 ...","method":"POST","path":"/svg2csv","status":400,"reason":"out_of_range","duration_ms":3,
  "request":{
    "headers":{"Content-Type":"multipart/form-data; boundary=...","User-Agent":"Mozilla/5.0 ...","Cookie":"[REDACTED]","Cf-Ray":"8c7a...-NRT"},
    "form":{"json_data":"{\"power\":5,\"speed\":1000}"},
@@ -240,6 +240,7 @@ Origin, Referer, X-Request-ID, CF-Ray, CF-IPCountry
 | `app/python-backend/logging_config.py` (新規) | `configure_logging()`、環境変数の検証、`build_logging_dict()` (gunicorn と共用) |
 | `app/python-backend/error_reason.py` (新規) | 理由コードの `ErrorReason` (`StrEnum`) |
 | `app/python-backend/log_event.py` (新規) | event 名の `LogEvent` (`StrEnum`) |
+| `app/python-backend/stream_utils.py` (新規) | 読み取り位置を変えずにストリームのサイズを返す `stream_size()` (request_logging と service で共用) |
 | `app/python-backend/request_logging.py` (新規) | request_id の検証、ヘッダの伏せ字処理、フォーム・ファイル情報の要約 (純粋関数) と `before_request` / `after_request` の登録 |
 | `app/python-backend/app.py` | `configure_logging()` とフックの登録、`RequestError` への `reason` 追加、`logging.exception` の置き換え |
 | `app/python-backend/service/converter_service.py` | ステップごとの処理時間の計測と `convert.completed` |
@@ -248,20 +249,28 @@ Origin, Referer, X-Request-ID, CF-Ray, CF-IPCountry
 | `app/react-frontend/src/utils/clientId.ts` (新規) / `src/hooks/useDataSubmission.ts` | 匿名 ID の生成と `X-Client-ID` ヘッダの送信 |
 | `app/react-frontend/nginx.conf` | `/api/` に `X-Real-IP` と `X-Request-ID` の `proxy_set_header` を追加 |
 | `docker-compose.yml` / `docker-compose.deploy.yml` / `docker-compose.dev.yml` | `LOG_LEVEL` / `LOG_FORMAT` とログローテーション |
+| `README.md` | 「アクセスログについて」(記録する項目と利用目的の公表、ログの確認方法) |
+| `app/python-backend/tests/` | 9 章のテスト |
 
 ## 9. テスト方針
 
-TDD で進める。`structlog.testing.capture_logs()` でログを検証する。
+TDD で進める。結合テストでは `tests/conftest.py` の `log_output` fixture でログを検証する。`structlog.testing.LogCapture` の前に `merge_contextvars` を挟んでいるので、`request_id` などの contextvars も含めて確認できる (`structlog.testing.capture_logs()` だと contextvars が付かない)。
+
+設定・定義の単体テスト:
+
+- `tests/test_logging_config.py`: `LOG_LEVEL` / `LOG_FORMAT` の読み込み (大文字小文字の正規化、Enum への変換、不正な値で指定できる値の一覧を含む `ValueError`)、`LogLevel` と標準 logging のレベル番号の対応、JSON 出力の共通フィールド、標準 logging のログも同じ形式になること、改行を含む値で行が分かれないこと、gunicorn のアクセスログが出ないこと
+- `tests/test_gunicorn_conf.py`: `gunicorn.conf.py` がアプリと同じログ設定を使い、不正な `LOG_LEVEL` で起動時に失敗すること
+- `tests/test_log_event.py` / `tests/test_error_reason.py`: Enum の値が 3.2 / 3.3 節の一覧と一致し、JSON に文字列のまま出ること
 
 単体テスト (`tests/test_request_logging.py`):
 
 - `X-Request-ID` の検証: 正しい値は採用、長すぎる値・記号を含む値は新しい ID を生成
-- ヘッダの伏せ字: `Cookie` / `Authorization` / `Cf-Access-Jwt-Assertion` が `[REDACTED]`、`User-Agent` はそのまま、名前の大文字小文字を区別しない
+- ヘッダの伏せ字: `Cookie` / `Authorization` / `Cf-Access-Jwt-Assertion` が `[REDACTED]`、`User-Agent` はそのまま、名前の大文字小文字を区別しない、`Referer` のクエリ文字列を落とす
 - フォーム値が 1KB で切り詰められる
 - ファイル情報に `filename` そのものが含まれない
 - `user_agent` が 256 文字で切り詰められる
 - `client_id`: UUID v4 は小文字にして採用、それ以外 (UUID の別形式・末尾改行・メールアドレス等) は `None`
-- `LOG_LEVEL` / `LOG_FORMAT` の不正な値で `ValueError`
+- `level_for_status`: ステータスコードから `LogLevel` を決める
 
 結合テスト (`tests/test_app_logging.py`、Flask の test client):
 
@@ -273,7 +282,10 @@ TDD で進める。`structlog.testing.capture_logs()` でログを検証する�
 - `client_ip` は `X-Real-IP` から取られ、`CF-Connecting-IP` / `X-Forwarded-For` は無視される
 - `client_id` が `X-Client-ID` から取られ、不正な値はログに残らない
 - `/healthz` では `request.completed` が出ない
-- INFO では SVG の中身がログに出ない
+- INFO では SVG の中身がログに出ない (DEBUG では先頭が出る)
+- 存在しないパスへの大きすぎるボディでも、`request.log_failed` にならずヘッダだけ記録される
+- 前のリクエストの `request_id` / `cf_ray` が次のリクエストのログに残らない
+- 500 のレスポンスにも `X-Request-ID` が付く
 
 ## 10. 実装手順
 
