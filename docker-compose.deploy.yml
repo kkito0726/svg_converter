@@ -4,8 +4,9 @@
 # 事前に同じディレクトリの .env に CLOUDFLARE_TUNNEL_TOKEN を設定しておく (.env.example 参照)
 # Cloudflare 側の Public Hostname のサービスは http://react-frontend:80 を指定する
 #
-# 公開は Cloudflare Tunnel (+ Cloudflare Access) 経由のみ。どのサービスもホストのポートを公開しない。
-# (ポートを開けると Access を迂回でき、レート制限キー CF-Connecting-IP も偽装できるため)
+# 公開は Cloudflare Tunnel 経由のみ。どのサービスもホストのポートを公開しない。
+# (ポートを開けると、レート制限とアクセスログの client_ip に使う CF-Connecting-IP を偽装できるため)
+# Cloudflare Access (ログイン) は設定しておらず、URL を知っていれば誰でもアクセスできる。
 # 研究室 PC 向けの docker-compose.yml とは独立しているので、設定を変える場合は両方を見直すこと。
 services:
   react-frontend:
@@ -24,6 +25,14 @@ services:
       - "5001"
     environment:
       - MAX_UPLOAD_MB=20
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+    # ログはコンテナの作り直しで消える。容量の上限だけ設ける (docs/logging-design.md 11 章)
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     mem_limit: 1g
     read_only: true
     tmpfs:

@@ -14,6 +14,7 @@ import {
   MAX_UPLOAD_MB,
   SVG2CSV_ENDPOINT,
 } from "../config/api";
+import { CLIENT_ID_HEADER, getClientId } from "../utils/clientId";
 
 export type ConversionResult = ConverterResponse & {
   params: FormValues;
@@ -70,6 +71,7 @@ export const useDataSubmission = () => {
 
       const res = await fetch(SVG2CSV_ENDPOINT, {
         method: "POST",
+        headers: { [CLIENT_ID_HEADER]: getClientId() },
         body: formData,
       });
       if (!res.ok) {

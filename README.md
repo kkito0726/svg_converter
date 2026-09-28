@@ -53,7 +53,7 @@ docker compose -f docker-compose.deploy.yml up -d
 ```
 
 - アプリに認証機能はないため、利用者を限定する場合は Cloudflare Access でアクセス制限をかける
-- `docker-compose.deploy.yml` は単体で完結する本番用の構成で、ホストのポート (4174 など) を一切公開しない。アクセスは Tunnel 経由のみ (Access を迂回させないため)
+- `docker-compose.deploy.yml` は単体で完結する本番用の構成で、ホストのポート (4174 など) を一切公開しない。アクセスは Tunnel 経由のみ (レート制限とアクセスログに使う IP を偽装させないため。Access を導入した場合に迂回させないためでもある)
 - 1 回の変換で扱える量には上限がある (SVG の要素 50,000 個・線分 200,000 本)。超えると 400 エラーになる
 - 変換 API は nginx でレート制限 (1 IP あたり 20 回/分) をかけている
 - `.env` はトークンを含むため Git の管理対象外 (`.gitignore` 済み)。コミットしないこと
@@ -110,6 +110,21 @@ $ amc_plt csv_fileのパス　-c
 ```bash
 $ sudo shutdown -h now
 ```
+## アクセスログについて
+
+不正利用・障害の調査と利用状況の把握のため、変換 API へのアクセスごとに以下を記録している。詳細は [docs/logging-design.md](docs/logging-design.md) を参照。
+
+- 記録するもの: 日時、アクセス元の IP アドレス、ブラウザ情報 (User-Agent)、ブラウザごとの匿名 ID (ランダムな値で、個人の情報は含まない)、処理結果と処理時間、変換に失敗したときの入力パラメータ
+- 記録しないもの: アップロードした SVG の中身とファイル名、変換結果の CSV
+- ログはサーバーの Docker 内にだけ保存し、上記の目的以外には使わない。コンテナを作り直すと消える
+
+ログの確認方法:
+
+```bash
+docker compose logs python-backend                              # 研究室の PC など
+docker compose -f docker-compose.deploy.yml logs python-backend  # 自宅サーバー
+```
+
 ## アップデート方法
 
 研究室の PC などで使う場合
