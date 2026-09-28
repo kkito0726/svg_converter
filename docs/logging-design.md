@@ -44,7 +44,11 @@
 | `event` | `request.completed` | 集計のキー |
 | `logger` | `service.converter_service` | `getLogger(__name__)` の名前 |
 
-JSON では、この 4 つを `timestamp` → `level` → `event` → `logger` の順で行の先頭に並べ、残りのフィールドはその後ろに続ける (`logging_config.py` の `order_leading_keys`)。
+JSON のキーは、ログを目で追うときに何が起きたかがすぐ分かるよう、次の順に並べる (`logging_config.py` の `order_keys`)。無いキーは飛ばす。
+
+`timestamp` → `level` → `event` → `method` → `status` → `reason` → `path` → `duration_ms` → その他 (元の順) → `logger` → `request`
+
+`logger` は読むときの情報量が少なく、`request` (ヘッダ一覧など) は長いので末尾に回す。
 
 リクエスト処理中に出る行に付くもの (`contextvars` で自動付与):
 
@@ -87,14 +91,14 @@ JSON では、この 4 つを `timestamp` → `level` → `event` → `logger` �
 成功時:
 
 ```json
-{"timestamp":"2026-09-26T01:23:45.678Z","level":"info","event":"convert.completed","logger":"service.converter_service","request_id":"9f1c2a...","svg_bytes":48213,"power":0.5,"speed":1000,"svg2csv_ms":120,"plot_ms":640,"csv_bytes":20411}
-{"timestamp":"2026-09-26T01:23:45.690Z","level":"info","event":"request.completed","logger":"request_logging","request_id":"9f1c2a...","client_ip":"203.0.113.5","client_id":"3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b","user_agent":"Mozilla/5.0 (Macintosh; ...)","method":"POST","path":"/svg2csv","status":200,"duration_ms":781,"content_length":48900}
+{"timestamp":"2026-09-26T01:23:45.678Z","level":"info","event":"convert.completed","svg_bytes":48213,"power":0.5,"speed":1000,"svg2csv_ms":120,"plot_ms":640,"csv_bytes":20411,"request_id":"9f1c2a...","logger":"service.converter_service"}
+{"timestamp":"2026-09-26T01:23:45.690Z","level":"info","event":"request.completed","method":"POST","status":200,"path":"/svg2csv","duration_ms":781,"content_length":48900,"client_ip":"203.0.113.5","client_id":"3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b","user_agent":"Mozilla/5.0 (Macintosh; ...)","request_id":"9f1c2a...","logger":"request_logging"}
 ```
 
 入力エラー時:
 
 ```json
-{"timestamp":"...","level":"warning","event":"request.completed","logger":"request_logging","request_id":"9f1c...","client_ip":"203.0.113.5","client_id":"3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b","user_agent":"Mozilla/5.0 ...","method":"POST","path":"/svg2csv","status":400,"reason":"out_of_range","duration_ms":3,
+{"timestamp":"...","level":"warning","event":"request.completed","method":"POST","status":400,"reason":"out_of_range","path":"/svg2csv","duration_ms":3,"client_ip":"203.0.113.5","client_id":"3f2b8c1e-9a4d-4e7f-8b2a-1c3d5e7f9a0b","user_agent":"Mozilla/5.0 ...","request_id":"9f1c...","logger":"request_logging",
  "request":{
    "headers":{"Content-Type":"multipart/form-data; boundary=...","User-Agent":"Mozilla/5.0 ...","Cookie":"[REDACTED]","Cf-Ray":"8c7a...-NRT"},
    "form":{"json_data":"{\"power\":5,\"speed\":1000}"},

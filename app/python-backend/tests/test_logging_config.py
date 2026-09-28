@@ -95,8 +95,38 @@ def test_json_output_starts_with_timestamp_and_level(emit):
         structlog.get_logger("svc").warning("convert.completed", svg_bytes=10, plot_ms=5)
 
     keys = list(json.loads(emit({}, log)))
-    assert keys[:4] == ["timestamp", "level", "event", "logger"]
-    assert set(keys[4:]) == {"request_id", "svg_bytes", "plot_ms"}
+    assert keys[:3] == ["timestamp", "level", "event"]
+    assert set(keys[3:-1]) == {"request_id", "svg_bytes", "plot_ms"}
+    assert keys[-1] == "logger"
+
+
+def test_request_completed_puts_method_and_status_first(emit):
+    def log():
+        structlog.get_logger("request_logging").warning(
+            "request.completed",
+            path="/svg2csv",
+            status=400,
+            duration_ms=1,
+            client_ip="203.0.113.5",
+            request={"headers": {}},
+            reason="out_of_range",
+            method="POST",
+        )
+
+    keys = list(json.loads(emit({}, log)))
+    assert keys == [
+        "timestamp",
+        "level",
+        "event",
+        "method",
+        "status",
+        "reason",
+        "path",
+        "duration_ms",
+        "client_ip",
+        "logger",
+        "request",
+    ]
 
 
 def test_stdlib_json_output_starts_with_timestamp_and_level(emit):

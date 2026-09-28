@@ -61,15 +61,20 @@ def load_settings(env: Mapping[str, str]) -> LogSettings:
     )
 
 
-# JSON の先頭に並べるキー。残りのキーはこの後ろに元の順で続く
-LEADING_KEYS = ("timestamp", "level", "event", "logger")
+# JSON のキーの並び。目で追うときに何が起きたかがすぐ分かるよう、時刻・レベル・イベント名と
+# request.completed の結果 (method / status / reason) を先頭に置く。無いキーは飛ばす
+LEADING_KEYS = ("timestamp", "level", "event", "method", "status", "reason", "path", "duration_ms")
+# 読むときの情報量が少ない logger と、長い request (ヘッダ一覧など) は末尾に回す
+TRAILING_KEYS = ("logger", "request")
 
 
-def order_leading_keys(_logger, _method_name: str, event_dict: dict) -> dict:
-    """読みやすいように時刻・レベル・イベント名を先頭に並べる"""
+def order_keys(_logger, _method_name: str, event_dict: dict) -> dict:
+    """LEADING_KEYS → その他 (元の順) → TRAILING_KEYS の順に並べ替える"""
+    pinned = {*LEADING_KEYS, *TRAILING_KEYS}
     leading = {key: event_dict[key] for key in LEADING_KEYS if key in event_dict}
-    rest = {key: value for key, value in event_dict.items() if key not in leading}
-    return {**leading, **rest}
+    rest = {key: value for key, value in event_dict.items() if key not in pinned}
+    trailing = {key: event_dict[key] for key in TRAILING_KEYS if key in event_dict}
+    return {**leading, **rest, **trailing}
 
 
 def _render_processors(log_format: LogFormat) -> list:
@@ -78,7 +83,7 @@ def _render_processors(log_format: LogFormat) -> list:
         return [structlog.dev.ConsoleRenderer()]
     return [
         structlog.processors.format_exc_info,
-        order_leading_keys,
+        order_keys,
         structlog.processors.JSONRenderer(ensure_ascii=False),
     ]
 
