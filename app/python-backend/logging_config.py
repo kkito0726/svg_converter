@@ -61,10 +61,26 @@ def load_settings(env: Mapping[str, str]) -> LogSettings:
     )
 
 
+# JSON の先頭に並べるキー。残りのキーはこの後ろに元の順で続く
+LEADING_KEYS = ("timestamp", "level", "event", "logger")
+
+
+def order_leading_keys(_logger, _method_name: str, event_dict: dict) -> dict:
+    """読みやすいように時刻・レベル・イベント名を先頭に並べる"""
+    leading = {key: event_dict[key] for key in LEADING_KEYS if key in event_dict}
+    rest = {key: value for key, value in event_dict.items() if key not in leading}
+    return {**leading, **rest}
+
+
 def _render_processors(log_format: LogFormat) -> list:
     if log_format == LogFormat.CONSOLE:
+        # ConsoleRenderer は自前で「時刻 レベル イベント」の順に表示する
         return [structlog.dev.ConsoleRenderer()]
-    return [structlog.processors.format_exc_info, structlog.processors.JSONRenderer(ensure_ascii=False)]
+    return [
+        structlog.processors.format_exc_info,
+        order_leading_keys,
+        structlog.processors.JSONRenderer(ensure_ascii=False),
+    ]
 
 
 def build_logging_dict(settings: LogSettings) -> dict:

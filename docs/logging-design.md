@@ -44,6 +44,8 @@
 | `event` | `request.completed` | 集計のキー |
 | `logger` | `service.converter_service` | `getLogger(__name__)` の名前 |
 
+JSON では、この 4 つを `timestamp` → `level` → `event` → `logger` の順で行の先頭に並べ、残りのフィールドはその後ろに続ける (`logging_config.py` の `order_leading_keys`)。
+
 リクエスト処理中に出る行に付くもの (`contextvars` で自動付与):
 
 | キー | 例 | 備考 |

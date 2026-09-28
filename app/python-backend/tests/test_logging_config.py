@@ -89,6 +89,21 @@ def test_json_output_has_common_fields(emit):
     assert line["note"] == "日本語"
 
 
+def test_json_output_starts_with_timestamp_and_level(emit):
+    def log():
+        structlog.contextvars.bind_contextvars(request_id="req-1")
+        structlog.get_logger("svc").warning("convert.completed", svg_bytes=10, plot_ms=5)
+
+    keys = list(json.loads(emit({}, log)))
+    assert keys[:4] == ["timestamp", "level", "event", "logger"]
+    assert set(keys[4:]) == {"request_id", "svg_bytes", "plot_ms"}
+
+
+def test_stdlib_json_output_starts_with_timestamp_and_level(emit):
+    out = emit({}, lambda: logging.getLogger("gunicorn.error").info("Booting worker"))
+    assert list(json.loads(out)) == ["timestamp", "level", "event", "logger"]
+
+
 def test_stdlib_logs_use_same_json_format(emit):
     out = emit({}, lambda: logging.getLogger("gunicorn.error").info("Booting worker"))
     line = json.loads(out)
