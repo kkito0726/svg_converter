@@ -14,7 +14,8 @@ on:
       - "!**/.gitignore"
       - "!app/python-backend/tests/**"
       - "!app/python-backend/requirements-dev.txt"
-  # PR ではテスト・フロントエンドのビルド確認・本番構成のチェックのみ実行する (ドキュメントだけの変更では走らない)
+  # PR ではテスト・フロントエンドのビルド確認・本番構成のチェックと、イメージのビルド確認 (公開はしない) を行う
+  # (ドキュメントだけの変更では走らない)
   pull_request:
     branches: [main, "develop/**"]
     paths:
@@ -57,7 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # 本番構成 (Cloudflare Tunnel) は単体で完結し、Access を迂回できるホストのポートを一切公開しないこと
+      # 本番構成 (Cloudflare Tunnel) は単体で完結し、ホストのポートを一切公開しないこと
+      # (ポートを開けると、レート制限とアクセスログに使う CF-Connecting-IP を偽装できる)
       - name: Deploy config is standalone and publishes no host ports
         env:
           CLOUDFLARE_TUNNEL_TOKEN: dummy
@@ -85,6 +87,34 @@ jobs:
       # tsc -b による型チェックを含む
       - run: npm run build
       - run: npm audit --omit=dev --audit-level=high
+
+  # Dockerfile の変更 (ベースイメージの更新など) を PR の段階で検証する。
+  # 上のジョブは CI 側で指定した Python / Node で動くため、Dockerfile の FROM を変えても検証されない
+  build-image-check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: backend
+            context: app/python-backend
+          - name: frontend
+            context: app/react-frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      # 本番の Raspberry Pi 5 (arm64) でもビルドできることを確認する (wheel の有無はアーキテクチャで変わる)
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          platforms: linux/amd64,linux/arm64
+          push: false
+          # main のビルドのキャッシュを読むだけにする (PR のビルド結果でキャッシュを汚さない)
+          cache-from: type=gha,scope=${{ matrix.name }}
 
   build:
     needs: [test-backend, build-frontend, check-compose]
