@@ -84,6 +84,7 @@ jobs:
           cache: npm
           cache-dependency-path: app/react-frontend/package-lock.json
       - run: npm ci
+      - run: npm run lint
       # tsc -b による型チェックを含む
       - run: npm run build
       - run: npm audit --omit=dev --audit-level=high
