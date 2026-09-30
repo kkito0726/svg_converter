@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as ET
 from svgpathtools import parse_path
-import pandas as pd
-import os, re
+import re
 
 
 NAMESPACES = {"svg": "http://www.w3.org/2000/svg"}
@@ -44,20 +43,8 @@ class InvalidSvgError(ValueError):
     """変換できないSVGが渡されたときの例外"""
 
 
-def svg2cmd(file_name) -> list[list[str]]:
-    """
-    SVGデータからすべての線分または折れ線のノード座標を取得して配列として返す。
-
-    Parameters:
-        file_name: SVGファイルのパス、またはファイルオブジェクト。
-
-    Returns:
-        List[List[str]]: 各pathのコマンドリスト。
-    """
-    return _root2cmd(ET.parse(file_name).getroot())
-
-
 def _root2cmd(root: ET.Element) -> list[list[str]]:
+    """SVGのすべての線分のノード座標を、pathごとのコマンドリスト (["M x,y", "L x,y", ...]) として返す"""
     namespaces = NAMESPACES
 
     # <path>要素を取得
@@ -156,9 +143,3 @@ def convert_svg_csv(file_name, power: float, velocity: int):
         data.append(["", "", "", ""])
 
     return data
-
-
-def svg2csv(file_name: str, power: float, velocity: int) -> None:
-    data = convert_svg_csv(file_name, power, velocity)
-    out_name = os.path.splitext(file_name)[0] + ".csv"
-    pd.DataFrame(data).to_csv(out_name, header=False, index=False)
