@@ -6,7 +6,7 @@ type ProcessingProps = {
 export const Processing: React.FC<ProcessingProps> = ({ message }) => {
   return (
     <div
-      className="absolute inset-0 z-10 overflow-hidden rounded-2xl bg-canvas/75 backdrop-blur-sm"
+      className="absolute inset-0 z-10 overflow-hidden rounded-2xl bg-canvas/75 backdrop-blur-xs"
       role="status"
       aria-live="polite"
     >

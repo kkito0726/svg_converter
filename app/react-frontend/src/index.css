@@ -1,6 +1,113 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-canvas: rgb(var(--c-canvas));
+  --color-panel: rgb(var(--c-panel));
+  --color-raised: rgb(var(--c-raised));
+  --color-line: rgb(var(--c-line));
+  --color-ink: rgb(var(--c-ink));
+  --color-muted: rgb(var(--c-muted));
+  --color-accent: rgb(var(--c-accent));
+  --color-laser: rgb(var(--c-laser));
+  --color-danger: rgb(var(--c-danger));
+
+  --font-display: 'Chakra Petch', 'Zen Kaku Gothic New', sans-serif;
+  --font-sans:
+    'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo,
+    sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  --animate-scan: scan 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  --animate-rise: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes scan {
+    0% {
+      top: 0%;
+    }
+    100% {
+      top: 100%;
+    }
+  }
+  @keyframes rise {
+    0% {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  /* v4 ではボタンのカーソルが default になったため、v3 と同じ pointer に戻す */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility panel {
+  @apply rounded-2xl border border-line/70 bg-panel/80 shadow-[0_1px_0_0_rgb(255_255_255/0.04)_inset,0_20px_40px_-24px_rgb(0_0_0/0.8)] backdrop-blur-sm;
+}
+
+@utility eyebrow {
+  @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition
+      disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+@utility btn-primary {
+  @apply btn bg-accent text-canvas shadow-[0_0_0_1px_rgb(var(--c-accent)/0.4),0_8px_24px_-8px_rgb(var(--c-accent)/0.6)]
+      hover:brightness-110 active:brightness-95;
+}
+
+@utility btn-ghost {
+  @apply btn border border-line bg-raised/60 text-ink hover:border-muted/60 hover:bg-raised;
+}
+
+@utility crop-marks {
+  /* プレビュー枠の四隅のトンボ */
+  @apply pointer-events-none absolute inset-3;
+  background:
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top
+      left / 14px 1px,
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top
+      left / 1px 14px,
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top
+      right / 14px 1px,
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top
+      right / 1px 14px,
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6))
+      bottom left / 14px 1px,
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6))
+      bottom left / 1px 14px,
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6))
+      bottom right / 14px 1px,
+    linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6))
+      bottom right / 1px 14px;
+  background-repeat: no-repeat;
+}
 
 @layer base {
   :root {
@@ -32,46 +139,7 @@
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-accent/70 ring-offset-2 ring-offset-canvas;
-  }
-}
-
-@layer components {
-  .panel {
-    @apply rounded-2xl border border-line/70 bg-panel/80 shadow-[0_1px_0_0_rgb(255_255_255/0.04)_inset,0_20px_40px_-24px_rgb(0_0_0/0.8)] backdrop-blur;
-  }
-
-  .eyebrow {
-    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted;
-  }
-
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition
-      disabled:cursor-not-allowed disabled:opacity-40;
-  }
-
-  .btn-primary {
-    @apply btn bg-accent text-canvas shadow-[0_0_0_1px_rgb(var(--c-accent)/0.4),0_8px_24px_-8px_rgb(var(--c-accent)/0.6)]
-      hover:brightness-110 active:brightness-95;
-  }
-
-  .btn-ghost {
-    @apply btn border border-line bg-raised/60 text-ink hover:border-muted/60 hover:bg-raised;
-  }
-
-  /* プレビュー枠の四隅のトンボ */
-  .crop-marks {
-    @apply pointer-events-none absolute inset-3;
-    background:
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top left / 14px 1px,
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top left / 1px 14px,
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top right / 14px 1px,
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) top right / 1px 14px,
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom left / 14px 1px,
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom left / 1px 14px,
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom right / 14px 1px,
-      linear-gradient(rgb(var(--c-accent) / 0.6), rgb(var(--c-accent) / 0.6)) bottom right / 1px 14px;
-    background-repeat: no-repeat;
+    @apply outline-hidden ring-2 ring-accent/70 ring-offset-2 ring-offset-canvas;
   }
 }
 

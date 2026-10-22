@@ -81,7 +81,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
               {file.name}
             </p>
             <p className="mt-0.5 font-mono text-xs text-muted">
-              <span className="mr-2 rounded bg-accent/15 px-1.5 py-0.5 text-accent">
+              <span className="mr-2 rounded-sm bg-accent/15 px-1.5 py-0.5 text-accent">
                 SVG
               </span>
               {formatBytes(file.size)}
