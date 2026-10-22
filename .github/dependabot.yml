@@ -30,3 +30,23 @@ updates:
     directory: /
     schedule:
       interval: monthly
+
+  # バックエンドの Python パッケージ。脆弱性の修正は requirements.txt を上げないと入らないため対象にする。
+  # パッチ・マイナー更新は 1 本の PR にまとめ、メジャー更新は互換性を確認できるよう個別の PR にする。
+  - package-ecosystem: pip
+    directory: /app/python-backend
+    schedule:
+      interval: monthly
+    groups:
+      python-packages:
+        update-types: ["minor", "patch"]
+
+  # フロントエンドの npm パッケージ。本番イメージに入るのは react だけだが、ビルドツールの脆弱性も追えるよう対象にする。
+  # パッチ・マイナー更新は 1 本の PR にまとめ、メジャー更新は互換性を確認できるよう個別の PR にする。
+  - package-ecosystem: npm
+    directory: /app/react-frontend
+    schedule:
+      interval: monthly
+    groups:
+      npm-packages:
+        update-types: ["minor", "patch"]

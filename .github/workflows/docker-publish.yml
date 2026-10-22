@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12.14"
+          python-version: "3.12.15"
           cache: pip
           cache-dependency-path: app/python-backend/requirements*.txt
       - run: pip install -r requirements-dev.txt
@@ -80,7 +80,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.21.0
+          node-version: 24.22.1
           cache: npm
           cache-dependency-path: app/react-frontend/package-lock.json
       - run: npm ci
