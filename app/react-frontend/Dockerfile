@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # nginx は安定版 (stable) の系統を使う。1.27 系 (mainline) は 2025-06 にサポート終了
-FROM nginx:1.30.5-alpine@sha256:bf3201ab56f23e5954646379c775d511fc466e9f11376d9725361064ad07ed35
+FROM nginx:1.30.5-alpine@sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY security-headers.inc /etc/nginx/conf.d/security-headers.inc
